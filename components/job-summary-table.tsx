@@ -1,43 +1,40 @@
-import { formatCurrency, formatDate } from "@/lib/utils";
-import type { JobFrontmatter } from "@/lib/types";
+import { formatCurrencyRange, formatDate } from "@lib/utils";
+import type { JobContentItem } from "@lib/content-types";
 
-const summaryFields: Array<{ label: string; value: (job: JobFrontmatter) => string }> = [
-  { label: "Company", value: (job) => job.company },
-  { label: "Role", value: (job) => job.role },
-  { label: "Location", value: (job) => job.location },
-  { label: "Mode", value: (job) => (job.remote ? "Remote" : job.hybrid ? "Hybrid" : "On-site") },
-  { label: "Employment", value: (job) => job.employmentType.replace("_", " ") },
-  { label: "Duration", value: (job) => job.duration },
-  { label: "Start Date", value: (job) => formatDate(job.startDate) },
-  { label: "End Date", value: (job) => formatDate(job.endDate) },
-  {
-    label: "Compensation",
-    value: (job) =>
-      `${formatCurrency(job.salaryMin, job.stipendCurrency)} – ${formatCurrency(
-        job.salaryMax,
-        job.stipendCurrency
-      )} / ${job.salaryPeriod.toLowerCase()}`
-  },
-  { label: "Stipend", value: (job) => job.stipend },
-  { label: "Experience", value: (job) => job.experienceRequired },
-  { label: "Apply By", value: (job) => formatDate(job.deadline) }
-];
+export function JobSummaryTable({ item }: { item: JobContentItem }) {
+  const { frontmatter } = item;
 
-export function JobSummaryTable({ job }: { job: JobFrontmatter }) {
+  const rows = [
+    { label: "Company", value: `${frontmatter.company} (${frontmatter.companyType})` },
+    { label: "Role", value: frontmatter.role },
+    { label: "Location", value: `${frontmatter.city}, ${frontmatter.state}` },
+    { label: "Remote", value: frontmatter.remote ? "Yes" : "No" },
+    { label: "Hybrid", value: frontmatter.hybrid ? "Yes" : "No" },
+    {
+      label: "Compensation",
+      value: `${formatCurrencyRange(frontmatter.salaryMin, frontmatter.salaryMax, frontmatter.salaryPeriod)} | ${frontmatter.stipend}`
+    },
+    { label: "Duration", value: frontmatter.duration },
+    {
+      label: "Timeline",
+      value: `Start ${formatDate(frontmatter.startDate)} · End ${formatDate(frontmatter.endDate)}`
+    },
+    { label: "Apply by", value: formatDate(frontmatter.deadline) },
+    { label: "Experience required", value: frontmatter.experienceRequired },
+    { label: "Number of openings", value: frontmatter.numberOfOpenings.toString() }
+  ];
+
   return (
-    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-      <table className="w-full text-sm">
-        <tbody>
-          {summaryFields.map((field) => (
-            <tr key={field.label} className="border-b border-slate-100 last:border-none">
-              <th className="w-40 bg-slate-50 px-4 py-3 text-left font-semibold text-slate-600">
-                {field.label}
-              </th>
-              <td className="px-4 py-3 text-slate-700">{field.value(job)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 className="text-lg font-semibold text-slate-900">Role Snapshot</h2>
+      <dl className="mt-4 grid grid-cols-1 gap-4 text-sm text-slate-600 sm:grid-cols-2">
+        {rows.map((row) => (
+          <div key={row.label}>
+            <dt className="text-xs uppercase tracking-wide text-slate-400">{row.label}</dt>
+            <dd className="mt-1 text-slate-700">{row.value}</dd>
+          </div>
+        ))}
+      </dl>
     </section>
   );
 }

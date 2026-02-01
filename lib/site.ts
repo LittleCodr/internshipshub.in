@@ -1,20 +1,16 @@
-export const SITE_URL = "https://www.internshipshub.in";
-
-export const siteConfig = {
-  name: "InternshipsHub.in",
+export const SITE_META = {
+  name: "InternshipsHub",
+  url: "https://www.internshipshub.in",
   description:
-    "InternshipsHub.in surfaces curated internships, entry-level jobs, and research roles across India with structured filters, transparent compensation, and SEO-first architecture.",
-  keywords: [
-    "internships in india",
-    "graduate jobs india",
-    "campus placements",
-    "summer internships",
-    "remote internships india"
-  ],
-  email: "hello@internshipshub.in",
-  logoPath: "/logo.png",
-  socials: {
-    linkedin: "https://www.linkedin.com/company/internshipshub",
-    twitter: "https://twitter.com/internshipshub"
-  }
+    "InternshipsHub is India’s fastest internships and jobs discovery engine, built for ambitious students and early-career professionals.",
+  locale: "en_IN",
+  twitter: "@internshipshub",
+  email: "editor@internshipshub.in"
+};
+
+export const ORGANIZATION = {
+  name: "InternshipsHub Media Network",
+  legalName: "InternshipsHub Media Network LLP",
+  url: SITE_META.url,
+  logo: `${SITE_META.url}/logos/site-mark.svg`
 };

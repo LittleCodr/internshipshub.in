@@ -1,113 +1,169 @@
+import fs from "node:fs";
+import path from "node:path";
+import matter from "gray-matter";
 import { cache } from "react";
-import { compileMDX } from "next-mdx-remote/rsc";
-import remarkGfm from "remark-gfm";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { frontmatterSchema, type JobCategory, type JobContentItem } from "@lib/content-types";
 
-import {
-  jobFrontmatterSchema,
-  type ContentCategory,
-  type JobFrontmatter,
-  type JobWithContent
-} from "@/lib/types";
-import { mdxComponents } from "@/components/mdx-components";
-import rawContentIndex from "@/generated/content-index.json";
+const CONTENT_DIR = path.join(process.cwd(), "content");
 
-type RawEntry = {
-  frontmatter: unknown;
-  body: string;
+const CATEGORY_FOLDER: Record<JobCategory, string> = {
+  internship: "internships",
+  job: "jobs",
+  research: "research"
 };
 
-type RawContentIndex = Record<ContentCategory, RawEntry[]>;
-
-const rawIndex = rawContentIndex as RawContentIndex;
-
-const parsedIndex: Record<ContentCategory, Array<{ frontmatter: JobFrontmatter; body: string }>> = {
-  internship: rawIndex.internship.map((entry) => ({
-    frontmatter: jobFrontmatterSchema.parse(entry.frontmatter),
-    body: entry.body
-  })),
-  job: rawIndex.job.map((entry) => ({
-    frontmatter: jobFrontmatterSchema.parse(entry.frontmatter),
-    body: entry.body
-  })),
-  research: rawIndex.research.map((entry) => ({
-    frontmatter: jobFrontmatterSchema.parse(entry.frontmatter),
-    body: entry.body
-  }))
+type RawContent = {
+  category: JobCategory;
+  filePath: string;
+  content: JobContentItem;
 };
 
-const getCategoryEntries = (category: ContentCategory) => parsedIndex[category];
+const readFileSafe = (filePath: string) => fs.readFileSync(filePath, "utf8");
 
-const compileJobBody = async (body: string) =>
-  compileMDX<{ frontmatter: JobFrontmatter }>({
-    source: body,
-    options: {
-      parseFrontmatter: false,
-      mdxOptions: {
-        remarkPlugins: [remarkGfm as any],
-        rehypePlugins: [rehypeSlug as any, rehypeAutolinkHeadings as any]
-      }
-    },
-    components: mdxComponents
+const walkDirectory = (dirPath: string): string[] => {
+  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+  return entries.flatMap((entry) => {
+    const entryPath = path.join(dirPath, entry.name);
+    if (entry.isDirectory()) {
+      return walkDirectory(entryPath);
+    }
+    if (entry.isFile() && entry.name.endsWith(".mdx")) {
+      return [entryPath];
+    }
+    return [];
   });
+};
 
-export const getAllJobs = cache(async (): Promise<JobFrontmatter[]> => {
-  const combined = [
-    ...getCategoryEntries("internship"),
-    ...getCategoryEntries("job"),
-    ...getCategoryEntries("research")
-  ].map((entry) => entry.frontmatter);
+const computeReadingTime = (body: string) => {
+  const words = body.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 180));
+};
 
-  return combined.sort(
-    (a, b) => new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
-  );
-});
-
-export const getJobsByCategory = cache(async (category: ContentCategory) => {
-  const entries = getCategoryEntries(category).map((entry) => entry.frontmatter);
-  return entries.sort(
-    (a, b) => new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
-  );
-});
-
-export const getJobBySlug = cache(async (
-  category: ContentCategory,
-  slug: string
-): Promise<JobWithContent> => {
-  const match = getCategoryEntries(category).find((entry) => entry.frontmatter.slug === slug);
-
-  if (!match) {
-    throw new Error(`Job with slug ${slug} not found in category ${category}`);
+const normalizeFrontmatter = (data: unknown) => {
+  const parsed = frontmatterSchema.safeParse(data);
+  if (!parsed.success) {
+    throw new Error(`Invalid frontmatter: ${JSON.stringify(parsed.error.issues)}`);
   }
+  return parsed.data;
+};
 
-  const { content } = await compileJobBody(match.body);
+const readContentFile = (category: JobCategory, filePath: string): RawContent => {
+  const raw = readFileSafe(filePath);
+  const { content, data } = matter(raw);
+  const frontmatter = normalizeFrontmatter(data);
+  const readingTimeMinutes = computeReadingTime(content);
 
   return {
-    ...match.frontmatter,
-    content
+    category,
+    filePath,
+    content: {
+      frontmatter,
+      body: content.trim(),
+      slug: frontmatter.slug,
+      readingTimeMinutes
+    }
+  };
+};
+
+const loadAllContent = (): RawContent[] => {
+  const categories = Object.entries(CATEGORY_FOLDER) as Array<[JobCategory, string]>;
+  return categories.flatMap(([category, folder]) => {
+    const directory = path.join(CONTENT_DIR, folder);
+    if (!fs.existsSync(directory)) {
+      return [];
+    }
+    const files = walkDirectory(directory);
+    return files.map((filePath) => readContentFile(category, filePath));
+  });
+};
+
+const cachedContent = cache(() => {
+  const records = loadAllContent();
+  const deduped = new Map<string, RawContent>();
+
+  for (const record of records) {
+    if (deduped.has(record.content.slug)) {
+      throw new Error(`Duplicate slug detected: ${record.content.slug}`);
+    }
+    deduped.set(record.content.slug, record);
+  }
+
+  return {
+    items: Array.from(deduped.values()).map((entry) => entry.content),
+    byCategory: records.reduce<Record<JobCategory, JobContentItem[]>>(
+      (acc, record) => {
+        acc[record.category] = acc[record.category] ?? [];
+        acc[record.category].push(record.content);
+        return acc;
+      },
+      {
+        internship: [],
+        job: [],
+        research: []
+      }
+    )
   };
 });
 
-export const getJobPath = (job: JobFrontmatter) => {
-  switch (job.type) {
-    case "internship":
-      return `/internships/${job.slug}`;
-    case "job":
-      return `/jobs/${job.slug}`;
-    case "research":
-      return `/research/${job.slug}`;
-    default:
-      return `/internships/${job.slug}`;
-  }
-};
-
-export const getTrendingJobs = cache(async (limit = 6) => {
-  const all = await getAllJobs();
-  return all.slice(0, limit);
+export const getAllContent = cache(() => {
+  const { items } = cachedContent();
+  return items.sort((a, b) => {
+    const dateA = new Date(a.frontmatter.postedAt).getTime();
+    const dateB = new Date(b.frontmatter.postedAt).getTime();
+    return dateB - dateA;
+  });
 });
 
-export const getRemoteJobs = cache(async () => {
-  const all = await getAllJobs();
-  return all.filter((job) => job.remote);
+export const getContentByCategory = cache((category: JobCategory) => {
+  const { byCategory } = cachedContent();
+  return [...byCategory[category]].sort((a, b) => {
+    const dateA = new Date(a.frontmatter.postedAt).getTime();
+    const dateB = new Date(b.frontmatter.postedAt).getTime();
+    return dateB - dateA;
+  });
+});
+
+export const getContentBySlug = cache((slug: string) => {
+  const all = getAllContent();
+  return all.find((item) => item.frontmatter.slug === slug) ?? null;
+});
+
+export const getRelatedContent = (
+  item: JobContentItem,
+  limit = 3
+): JobContentItem[] => {
+  const all = getContentByCategory(item.frontmatter.type);
+  return all
+    .filter((entry) => entry.frontmatter.slug !== item.frontmatter.slug)
+    .sort((a, b) => {
+      let scoreA = 0;
+      let scoreB = 0;
+      if (a.frontmatter.city === item.frontmatter.city) scoreA += 2;
+      if (a.frontmatter.industry === item.frontmatter.industry) scoreA += 2;
+      if (a.frontmatter.remote === item.frontmatter.remote) scoreA += 1;
+
+      if (b.frontmatter.city === item.frontmatter.city) scoreB += 2;
+      if (b.frontmatter.industry === item.frontmatter.industry) scoreB += 2;
+      if (b.frontmatter.remote === item.frontmatter.remote) scoreB += 1;
+
+      return scoreB - scoreA;
+    })
+    .slice(0, limit);
+};
+
+export const getAllSlugs = cache(() => getAllContent().map((item) => item.frontmatter.slug));
+
+export const getCategoryCounts = cache(() => {
+  const { byCategory } = cachedContent();
+  return Object.entries(byCategory).reduce<Record<JobCategory, number>>(
+    (acc, [category, items]) => {
+      acc[category as JobCategory] = items.length;
+      return acc;
+    },
+    {
+      internship: 0,
+      job: 0,
+      research: 0
+    }
+  );
 });

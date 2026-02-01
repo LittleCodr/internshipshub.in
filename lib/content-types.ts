@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { z } from "zod";
 
 export const companyTypeEnum = z.enum([
@@ -22,7 +21,7 @@ export const salaryPeriodEnum = z.enum(["MONTH", "YEAR"]);
 
 export const applyMethodEnum = z.enum(["external", "email", "form"]);
 
-export const jobFrontmatterSchema = z.object({
+export const frontmatterSchema = z.object({
   title: z.string().min(1),
   slug: z.string().min(1),
   description: z.string().min(1),
@@ -44,8 +43,8 @@ export const jobFrontmatterSchema = z.object({
   hybrid: z.boolean(),
   stipend: z.string().min(1),
   stipendCurrency: z.literal("INR"),
-  salaryMin: z.number(),
-  salaryMax: z.number(),
+  salaryMin: z.number().nonnegative(),
+  salaryMax: z.number().nonnegative(),
   salaryPeriod: salaryPeriodEnum,
   paid: z.boolean(),
   duration: z.string().min(1),
@@ -56,16 +55,16 @@ export const jobFrontmatterSchema = z.object({
   publishedAt: z.string().min(1),
   validThrough: z.string().min(1),
   eligibility: z.string().min(1),
-  education: z.array(z.string().min(1)),
-  skills: z.array(z.string().min(1)),
-  branchesAllowed: z.array(z.string().min(1)),
-  yearOfStudy: z.array(z.string().min(1)),
+  education: z.array(z.string().min(1)).nonempty(),
+  skills: z.array(z.string().min(1)).nonempty(),
+  branchesAllowed: z.array(z.string().min(1)).nonempty(),
+  yearOfStudy: z.array(z.string().min(1)).nonempty(),
   ageLimit: z.string().min(1),
   applyLink: z.string().url(),
   applyMethod: applyMethodEnum,
-  applicationFee: z.number(),
-  numberOfOpenings: z.number().int().positive(),
-  keywords: z.array(z.string().min(1)),
+  applicationFee: z.number().min(0),
+  numberOfOpenings: z.number().min(1),
+  keywords: z.array(z.string().min(1)).nonempty(),
   canonicalUrl: z.string().url(),
   index: z.boolean(),
   priority: z.number().min(0).max(1),
@@ -74,12 +73,22 @@ export const jobFrontmatterSchema = z.object({
   lastUpdated: z.string().min(1)
 });
 
-export type JobFrontmatter = z.infer<typeof jobFrontmatterSchema>;
+export type JobFrontmatter = z.infer<typeof frontmatterSchema>;
+export type JobCategory = z.infer<typeof jobCategoryEnum>;
+export type CompanyType = z.infer<typeof companyTypeEnum>;
+export type EmploymentType = z.infer<typeof employmentTypeEnum>;
 
-export type JobWithContent = JobFrontmatter & {
-  content: ReactNode;
-};
+export interface JobContentItem {
+  frontmatter: JobFrontmatter;
+  body: string;
+  slug: string;
+  readingTimeMinutes: number;
+}
 
-export type JobSummary = JobFrontmatter;
-
-export type ContentCategory = z.infer<typeof jobCategoryEnum>;
+export interface PaginatedResult<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}

@@ -1,69 +1,58 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { Briefcase, Calendar, MapPin, Laptop, Building2 } from "lucide-react";
+import Image from "next/image";
+import { formatCurrencyRange, formatDate } from "@lib/utils";
+import type { JobContentItem } from "@lib/content-types";
 
-import { formatCurrency, formatDate } from "@/lib/utils";
-import type { JobFrontmatter } from "@/lib/types";
-import { getJobPath } from "@/lib/content";
-
-export function JobCard({ job }: { job: JobFrontmatter }) {
-  const path = getJobPath(job);
+export function JobCard({ item }: { item: JobContentItem }) {
+  const { frontmatter } = item;
+  const detailPath = `/${frontmatter.type === "job" ? "jobs" : frontmatter.type === "research" ? "research" : "internships"}/${frontmatter.slug}` as Route;
 
   return (
-    <article className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-primary/60">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-            {job.companyType.toUpperCase()} · {job.industry}
-          </p>
-          <h3 className="mt-1 text-lg font-semibold text-slate-900">
-            <Link href={path as unknown as Route}>{job.title}</Link>
-          </h3>
-          <p className="mt-2 text-sm text-slate-600">{job.description}</p>
+    <article className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="flex items-start gap-4">
+        <div className="relative h-12 w-12 overflow-hidden rounded bg-slate-100">
+          <Image
+            fill
+            alt={`${frontmatter.company} logo`}
+            src={frontmatter.companyLogo}
+            className="object-contain p-2"
+            sizes="48px"
+          />
         </div>
-        <div className="hidden shrink-0 text-right text-xs font-medium uppercase text-slate-500 sm:block">
-          {job.remote ? "Remote" : job.city}
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-slate-900">
+            <Link href={detailPath} className="hover:text-primary-600">
+              {frontmatter.title}
+            </Link>
+          </h3>
+          <p className="text-sm text-slate-500">
+            {frontmatter.company} · {frontmatter.city}, {frontmatter.state}
+          </p>
         </div>
       </div>
-      <dl className="grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
-        <div className="flex items-center gap-2">
-          <MapPin size={16} />
-          <span>{job.location}</span>
+      <dl className="grid grid-cols-1 gap-3 text-sm text-slate-600 sm:grid-cols-2">
+        <div>
+          <dt className="text-xs uppercase tracking-wide text-slate-400">Stipend / salary</dt>
+          <dd>{formatCurrencyRange(frontmatter.salaryMin, frontmatter.salaryMax, frontmatter.salaryPeriod)}</dd>
         </div>
-        <div className="flex items-center gap-2">
-          <Briefcase size={16} />
-          <span>{job.employmentType.replace("_", " ")}</span>
+        <div>
+          <dt className="text-xs uppercase tracking-wide text-slate-400">Role</dt>
+          <dd>{frontmatter.role}</dd>
         </div>
-        <div className="flex items-center gap-2">
-          <Laptop size={16} />
-          <span>{job.remote ? "Remote" : job.hybrid ? "Hybrid" : "On-site"}</span>
+        <div>
+          <dt className="text-xs uppercase tracking-wide text-slate-400">Duration</dt>
+          <dd>{frontmatter.duration}</dd>
         </div>
-        <div className="flex items-center gap-2">
-          <Building2 size={16} />
-          <span>{job.company}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Calendar size={16} />
-          <span>Apply by {formatDate(job.deadline)}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase text-primary">CTC</span>
-          <span>
-            {formatCurrency(job.salaryMin, job.stipendCurrency)} –
-            {" "}
-            {formatCurrency(job.salaryMax, job.stipendCurrency)} / {job.salaryPeriod.toLowerCase()}
-          </span>
+        <div>
+          <dt className="text-xs uppercase tracking-wide text-slate-400">Apply by</dt>
+          <dd>{formatDate(frontmatter.deadline)}</dd>
         </div>
       </dl>
-      <div className="flex items-center justify-between pt-1">
-        <p className="text-xs text-slate-500">
-          Posted {formatDate(job.postedAt)} · {job.numberOfOpenings} openings
-        </p>
-        <Link
-          href={path as unknown as Route}
-          className="rounded-full border border-primary px-4 py-1.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white"
-        >
-          View & Apply
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-slate-500">Posted {formatDate(frontmatter.postedAt)}</p>
+        <Link href={detailPath} className="text-sm font-semibold text-primary-600 hover:text-primary-700">
+          View details
         </Link>
       </div>
     </article>

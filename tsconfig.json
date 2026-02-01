@@ -1,47 +1,35 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "ES2020",
     "lib": [
-      "dom",
-      "dom.iterable",
-      "es2020"
+      "DOM",
+      "DOM.Iterable",
+      "ES2020"
     ],
     "allowJs": false,
     "skipLibCheck": true,
     "strict": true,
-    "noImplicitOverride": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "esModuleInterop": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": [
-      "node"
-    ],
     "baseUrl": ".",
     "paths": {
-      "@/components/*": [
+      "@components/*": [
         "components/*"
       ],
-      "@/content/*": [
-        "content/*"
-      ],
-      "@/lib/*": [
+      "@lib/*": [
         "lib/*"
       ],
-      "@/styles/*": [
-        "styles/*"
-      ],
-      "@/generated/*": [
-        "generated/*"
+      "@content/*": [
+        "content/*"
       ]
     },
-    "noEmit": true,
     "plugins": [
       {
         "name": "next"
@@ -52,7 +40,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.mdx",
+    "**/*.mts",
+    "**/*.cts",
     ".next/types/**/*.ts"
   ],
   "exclude": [

@@ -1,129 +1,67 @@
 import type { Metadata } from "next";
+import { JobCard } from "@components/job-card";
+import { FilterBar } from "@components/filter-bar";
+import { Pagination } from "@components/pagination";
+import { getAllContent } from "@lib/content";
+import { parseListingFilters, filterItems, getFilterOptions } from "@lib/filters";
+import { paginate, DEFAULT_PAGE_SIZE } from "@lib/pagination";
+import { buildListingMetadata } from "@lib/seo";
 
-import { FilterBar } from "@/components/filter-bar";
-import { JobCard } from "@/components/job-card";
-import { Pagination } from "@/components/pagination";
-import { SearchInput } from "@/components/search-input";
-import { StructuredData } from "@/components/structured-data";
-import { getRemoteJobs } from "@/lib/content";
-import { parseFilters, filterJobs, paginate, uniqueValues, uniqueSkills } from "@/lib/filters";
-import { buildBreadcrumbSchema } from "@/lib/schema";
-import { buildListingMetadata } from "@/lib/seo";
-
-const PAGE_SIZE = 12;
+export const dynamic = "force-static";
 
 export const metadata: Metadata = buildListingMetadata({
-  title: "Remote internships and jobs",
+  title: "Remote internships and early jobs",
   description:
-    "Remote-first internships, jobs, and research roles across India with verified stipends and deadlines.",
+    "Verified remote-first internships and jobs hiring across India. Includes stipend bands, async collaboration practices, and deadlines.",
   path: "/remote-internships",
-  keywords: [
-    "remote internships india",
-    "work from home internships",
-    "remote jobs india",
-    "virtual internships"
-  ]
+  keywords: ["remote internships india", "work from home internships", "remote jobs for students"]
 });
 
-type SearchParams = Record<string, string | string[] | undefined>;
-
-export const runtime = "edge";
-
-const createUrlSearchParams = (searchParams: SearchParams) => {
-  const params = new URLSearchParams();
-  Object.entries(searchParams).forEach(([key, value]) => {
-    if (!value) {
-      return;
-    }
-    if (Array.isArray(value)) {
-      value.filter(Boolean).forEach((entry) => params.append(key, entry));
-    } else {
-      params.set(key, value);
-    }
-  });
-  return params;
-};
-
-export default async function RemoteInternshipsPage({
+export default function RemoteInternshipsIndex({
   searchParams
 }: {
-  searchParams: SearchParams;
+  searchParams: Record<string, string | string[] | undefined>;
 }) {
-  const params = createUrlSearchParams(searchParams);
-  const filters = parseFilters(params);
-  const page = Number(params.get("page") ?? "1");
-
-  const remote = await getRemoteJobs();
-  const filtered = filterJobs(remote, { ...filters, remote: true });
-  const { items, total, totalPages, currentPage } = paginate(filtered, page, PAGE_SIZE);
-
-  const filterOptions = [
-    {
-      label: "Type",
-      name: "type",
-      options: [
-        { label: "Internships", value: "internship" },
-        { label: "Jobs", value: "job" },
-        { label: "Research", value: "research" }
-      ],
-      placeholder: "All types"
-    },
-    {
-      label: "Industry",
-      name: "industry",
-      options: uniqueValues(remote, "industry").map((value) => ({ label: value, value }))
-    },
-    {
-      label: "Skill",
-      name: "skill",
-      options: uniqueSkills(remote).map((value) => ({ label: value, value })),
-      placeholder: "Any skill"
-    }
-  ];
+  const coercedParams = { ...searchParams } as Record<string, string | string[] | undefined>;
+  if (!coercedParams.remote) {
+    coercedParams.remote = "true";
+  }
+  const filters = parseListingFilters(coercedParams);
+  const collection = getAllContent().filter((item) => item.frontmatter.remote);
+  const filtered = filterItems(collection, filters);
+  const page = Number(searchParams.page ?? "1") || 1;
+  const paginated = paginate(filtered, page, DEFAULT_PAGE_SIZE);
+  const options = getFilterOptions(collection);
 
   return (
-    <div className="space-y-8">
-      <StructuredData
-        data={buildBreadcrumbSchema([
-          { name: "InternshipsHub.in", path: "/" },
-          { name: "Remote Internships", path: "/remote-internships" }
-        ])}
-      />
-      <header className="space-y-4">
-        <h1 className="text-3xl font-bold text-slate-900">Remote internships & jobs</h1>
-        <p className="max-w-3xl text-base text-slate-600">
-          Work-from-anywhere internships and jobs with verified Indian employers and universities.
+    <div className="flex flex-col gap-10">
+      <header className="flex flex-col gap-2">
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+          Remote-first internships and jobs hiring now
+        </h1>
+        <p className="max-w-2xl text-sm text-slate-600">
+          Opportunities built for distributed teams across India with async onboarding and global exposure.
         </p>
-        <SearchInput placeholder="Search remote internships and jobs" />
       </header>
 
-      <FilterBar filters={filterOptions} />
+      <FilterBar options={options} selected={filters} action="/remote-internships" total={filtered.length} />
 
-      <div className="flex items-center justify-between text-sm text-slate-600">
-        <p>
-          Showing <span className="font-semibold text-slate-900">{items.length}</span> of
-          {" "}
-          <span className="font-semibold text-slate-900">{total}</span> remote opportunities
-        </p>
+      <div className="grid gap-6 md:grid-cols-2">
+        {paginated.items.map((item) => (
+          <JobCard key={item.frontmatter.slug} item={item} />
+        ))}
+        {!paginated.items.length && (
+          <p className="text-sm text-slate-500">
+            No remote roles match these filters. Loosen filters or check again soon.
+          </p>
+        )}
       </div>
 
-      {items.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-slate-200 bg-white p-6 text-sm text-slate-600">
-          No remote roles match your filters yet. Adjust the filters or explore hybrid options.
-        </p>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          {items.map((job) => (
-            <JobCard key={`${job.type}-${job.slug}`} job={job} />
-          ))}
-        </div>
-      )}
-
       <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
+        page={paginated.page}
+        totalPages={paginated.totalPages}
         basePath="/remote-internships"
-        params={params}
+        searchParams={searchParams}
       />
     </div>
   );

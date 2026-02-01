@@ -1,13 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   experimental: {
-    mdxRs: true
+    typedRoutes: true
   },
-  pageExtensions: ["ts", "tsx", "mdx"],
   images: {
-    formats: ["image/avif", "image/webp"],
-    remotePatterns: []
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*"
+      }
+    ]
   }
 };
 

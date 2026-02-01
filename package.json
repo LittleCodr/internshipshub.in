@@ -2,14 +2,15 @@
   "name": "internshipshub",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "predev": "node scripts/generate-content.mjs",
-    "prebuild": "node scripts/generate-content.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:content": "node scripts/generate-content.mjs"
+    "generate:content": "node scripts/generate-content.mjs",
+    "predev": "npm run generate:content",
+    "prebuild": "npm run generate:content"
   },
   "dependencies": {
     "@mdx-js/react": "^3.0.0",

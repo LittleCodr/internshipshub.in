@@ -1,111 +1,85 @@
 import type { Metadata } from "next";
+import { SITE_META } from "@lib/site";
+import { type JobContentItem } from "@lib/content-types";
 
-import { SITE_URL, siteConfig } from "@/lib/site";
-import type { JobFrontmatter } from "@/lib/types";
-import { getCanonicalUrl } from "@/lib/utils";
+interface BaseMetaInput {
+  title: string;
+  description: string;
+  canonical: string;
+  keywords?: string[];
+}
 
-export const baseMetadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: `${siteConfig.name} | Internships & Jobs in India`,
-    template: "%s | InternshipsHub.in"
-  },
-  description: siteConfig.description,
-  keywords: siteConfig.keywords,
-  icons: {
-    icon: siteConfig.logoPath,
-    shortcut: siteConfig.logoPath,
-    apple: siteConfig.logoPath
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_IN",
-    url: SITE_URL,
-    siteName: siteConfig.name,
-    title: `${siteConfig.name} | Internships & Jobs in India`,
-    description: siteConfig.description,
-    images: [
-      {
-        url: `${SITE_URL}${siteConfig.logoPath}`,
-        width: 512,
-        height: 512,
-        alt: `${siteConfig.name} logo`
-      }
-    ]
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${siteConfig.name} | Internships & Jobs in India`,
-    description: siteConfig.description,
-    images: [`${SITE_URL}${siteConfig.logoPath}`]
-  }
-};
-
-export const buildListingMetadata = (
-  {
-    title,
-    description,
-    path,
-    keywords
-  }: {
-    title: string;
-    description: string;
-    path: string;
-    keywords?: string[];
-  }
-): Metadata => ({
+const buildSharedMeta = ({ title, description, canonical, keywords = [] }: BaseMetaInput): Metadata => ({
   title,
   description,
   keywords,
   alternates: {
-    canonical: getCanonicalUrl(path, SITE_URL)
+    canonical
   },
   openGraph: {
     title,
     description,
-    url: getCanonicalUrl(path, SITE_URL)
+    url: canonical,
+    siteName: SITE_META.name,
+    type: "article"
   },
   twitter: {
+    card: "summary_large_image",
     title,
-    description
+    description,
+    creator: SITE_META.twitter
   }
 });
 
-export const buildJobMetadata = (job: JobFrontmatter): Metadata => {
-  return {
-    title: job.title,
-    description: job.description,
-    keywords: job.keywords,
-    alternates: {
-      canonical: job.canonicalUrl
-    },
-    openGraph: {
-      type: "article",
-      title: job.title,
-      description: job.description,
-      url: job.canonicalUrl,
-      images: [
-        {
-          url: job.companyLogo.startsWith("http")
-            ? job.companyLogo
-            : `${SITE_URL}${job.companyLogo}`,
-          width: 512,
-          height: 512,
-          alt: `${job.company} logo`
-        }
-      ],
-      publishedTime: job.publishedAt,
-      modifiedTime: job.lastUpdated
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: job.title,
-      description: job.description,
-      images: [
-        job.companyLogo.startsWith("http")
-          ? job.companyLogo
-          : `${SITE_URL}${job.companyLogo}`
-      ]
-    }
-  };
+export const buildListingMetadata = ({
+  title,
+  description,
+  path,
+  keywords
+}: {
+  title: string;
+  description: string;
+  path: string;
+  keywords?: string[];
+}): Metadata =>
+  buildSharedMeta({
+    title,
+    description,
+    canonical: `${SITE_META.url}${path}`,
+    keywords
+  });
+
+export const buildJobMetadata = (item: JobContentItem): Metadata =>
+  buildSharedMeta({
+    title: `${item.frontmatter.title} | ${SITE_META.name}`,
+    description: item.frontmatter.description,
+    canonical: item.frontmatter.canonicalUrl,
+    keywords: item.frontmatter.keywords
+  });
+
+export const DEFAULT_SITE_METADATA: Metadata = {
+  metadataBase: new URL(SITE_META.url),
+  title: {
+    default: `${SITE_META.name} | Internships & Jobs in India`,
+    template: `%s | ${SITE_META.name}`
+  },
+  description: SITE_META.description,
+  keywords: ["internships", "jobs", "research internships", "india", "student careers"],
+  openGraph: {
+    type: "website",
+    siteName: SITE_META.name,
+    locale: SITE_META.locale,
+    url: SITE_META.url,
+    title: SITE_META.name,
+    description: SITE_META.description
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: SITE_META.twitter,
+    creator: SITE_META.twitter
+  },
+  robots: {
+    index: true,
+    follow: true
+  }
 };

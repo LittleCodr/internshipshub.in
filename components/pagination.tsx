@@ -1,50 +1,54 @@
-import Link from "next/link";
-
-export function Pagination({
-  currentPage,
-  totalPages,
-  basePath,
-  params
-}: {
-  currentPage: number;
+interface PaginationProps {
+  page: number;
   totalPages: number;
   basePath: string;
-  params: URLSearchParams;
-}) {
-  if (totalPages <= 1) {
-    return null;
-  }
+  searchParams: Record<string, string | string[] | undefined>;
+}
 
-  const createPageLink = (page: number) => {
-    const nextParams = new URLSearchParams(params);
-    if (page === 1) {
-      nextParams.delete("page");
-    } else {
-      nextParams.set("page", page.toString());
+const buildHref = (
+  basePath: string,
+  page: number,
+  searchParams: Record<string, string | string[] | undefined>
+) => {
+  const params = new URLSearchParams();
+  Object.entries(searchParams).forEach(([key, value]) => {
+    if (key === "page") return;
+    if (Array.isArray(value)) {
+      params.set(key, value[0] ?? "");
+    } else if (value) {
+      params.set(key, value);
     }
-    const query = nextParams.toString();
-    return `${basePath}${query ? `?${query}` : ""}`;
-  };
+  });
+  if (page > 1) params.set("page", String(page));
+  const query = params.toString();
+  return query ? `${basePath}?${query}` : basePath;
+};
+
+export function Pagination({ page, totalPages, basePath, searchParams }: PaginationProps) {
+  if (totalPages <= 1) return null;
+
+  const prevPage = page > 1 ? page - 1 : null;
+  const nextPage = page < totalPages ? page + 1 : null;
 
   return (
-    <div className="flex items-center justify-center gap-3 text-sm">
-      <Link
-        href={createPageLink(Math.max(1, currentPage - 1))}
-        aria-disabled={currentPage === 1}
-        className="rounded-full border border-slate-200 px-3 py-1 text-slate-600 transition hover:border-primary hover:text-primary aria-disabled:pointer-events-none aria-disabled:opacity-50"
+    <nav className="flex items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm" aria-label="Pagination">
+      <a
+        href={prevPage ? buildHref(basePath, prevPage, searchParams) : "#"}
+        aria-disabled={!prevPage}
+        className={`font-medium ${prevPage ? "text-primary-600 hover:text-primary-700" : "pointer-events-none text-slate-300"}`}
       >
         Previous
-      </Link>
-      <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-        Page {currentPage} of {totalPages}
+      </a>
+      <span className="text-xs text-slate-500">
+        Page {page} of {totalPages}
       </span>
-      <Link
-        href={createPageLink(Math.min(totalPages, currentPage + 1))}
-        aria-disabled={currentPage === totalPages}
-        className="rounded-full border border-slate-200 px-3 py-1 text-slate-600 transition hover:border-primary hover:text-primary aria-disabled:pointer-events-none aria-disabled:opacity-50"
+      <a
+        href={nextPage ? buildHref(basePath, nextPage, searchParams) : "#"}
+        aria-disabled={!nextPage}
+        className={`font-medium ${nextPage ? "text-primary-600 hover:text-primary-700" : "pointer-events-none text-slate-300"}`}
       >
         Next
-      </Link>
-    </div>
+      </a>
+    </nav>
   );
 }

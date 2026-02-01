@@ -1,32 +1,35 @@
 import type { MetadataRoute } from "next";
+import { SITE_META } from "@lib/site";
+import { getAllContent } from "@lib/content";
 
-import { getAllJobs } from "@/lib/content";
-import { SITE_URL } from "@/lib/site";
-
-const staticRoutes = [
+const STATIC_ROUTES = [
   "/",
   "/internships",
   "/jobs",
   "/research-internships",
-  "/remote-internships"
+  "/remote-internships",
+  "/about",
+  "/contact",
+  "/privacy-policy",
+  "/terms",
+  "/disclaimer"
 ];
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const jobs = await getAllJobs();
-
-  const jobEntries = jobs.map((job) => ({
-    url: job.canonicalUrl,
-    lastModified: job.lastUpdated,
-    priority: job.priority,
-    changeFrequency: "daily" as const
+export default function sitemap(): MetadataRoute.Sitemap {
+  const now = new Date().toISOString();
+  const listings = getAllContent().map((item) => ({
+    url: item.frontmatter.canonicalUrl,
+    lastModified: item.frontmatter.lastUpdated,
+    changeFrequency: "weekly" as const,
+    priority: item.frontmatter.priority
   }));
 
-  const staticEntries = staticRoutes.map((route) => ({
-    url: `${SITE_URL}${route}`,
-    lastModified: new Date().toISOString(),
-    priority: 0.8,
-    changeFrequency: "daily" as const
+  const staticRoutes = STATIC_ROUTES.map((route) => ({
+    url: `${SITE_META.url}${route}`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: route === "/" ? 1 : 0.7
   }));
 
-  return [...staticEntries, ...jobEntries];
+  return [...staticRoutes, ...listings];
 }

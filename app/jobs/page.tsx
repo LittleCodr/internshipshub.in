@@ -1,130 +1,64 @@
 import type { Metadata } from "next";
+import { JobCard } from "@components/job-card";
+import { FilterBar } from "@components/filter-bar";
+import { Pagination } from "@components/pagination";
+import { getContentByCategory } from "@lib/content";
+import { parseListingFilters, filterItems, getFilterOptions } from "@lib/filters";
+import { paginate, DEFAULT_PAGE_SIZE } from "@lib/pagination";
+import { buildListingMetadata } from "@lib/seo";
 
-import { FilterBar } from "@/components/filter-bar";
-import { JobCard } from "@/components/job-card";
-import { Pagination } from "@/components/pagination";
-import { SearchInput } from "@/components/search-input";
-import { StructuredData } from "@/components/structured-data";
-import { getJobsByCategory } from "@/lib/content";
-import { parseFilters, filterJobs, paginate, uniqueValues, uniqueSkills } from "@/lib/filters";
-import { buildBreadcrumbSchema } from "@/lib/schema";
-import { buildListingMetadata } from "@/lib/seo";
-
-const PAGE_SIZE = 12;
+export const dynamic = "force-static";
 
 export const metadata: Metadata = buildListingMetadata({
-  title: "Entry-level jobs in India",
+  title: "Entry-level jobs across India",
   description:
-    "Entry-level and early-career jobs across India with transparent salaries, eligibility, and deadlines.",
+    "Structured fresher and associate roles from India’s top product teams. Filters for city, industry, and employment type included.",
   path: "/jobs",
-  keywords: [
-    "graduate jobs india",
-    "fresher jobs",
-    "full-time jobs india",
-    "entry level hiring"
-  ]
+  keywords: ["entry level jobs india", "associate product manager jobs", "graduate jobs india"]
 });
 
-type SearchParams = Record<string, string | string[] | undefined>;
-
-export const runtime = "edge";
-
-const createUrlSearchParams = (searchParams: SearchParams) => {
-  const params = new URLSearchParams();
-  Object.entries(searchParams).forEach(([key, value]) => {
-    if (!value) {
-      return;
-    }
-    if (Array.isArray(value)) {
-      value.filter(Boolean).forEach((entry) => params.append(key, entry));
-    } else {
-      params.set(key, value);
-    }
-  });
-  return params;
-};
-
-export default async function JobsPage({ searchParams }: { searchParams: SearchParams }) {
-  const params = createUrlSearchParams(searchParams);
-  const filters = parseFilters(params);
-  const page = Number(params.get("page") ?? "1");
-
-  const jobs = await getJobsByCategory("job");
-  const filtered = filterJobs(jobs, { ...filters, type: "job" });
-  const { items, total, totalPages, currentPage } = paginate(filtered, page, PAGE_SIZE);
-
-  const filterOptions = [
-    {
-      label: "City",
-      name: "city",
-      options: uniqueValues(jobs, "city").map((value) => ({ label: value, value }))
-    },
-    {
-      label: "State",
-      name: "state",
-      options: uniqueValues(jobs, "state").map((value) => ({ label: value, value }))
-    },
-    {
-      label: "Industry",
-      name: "industry",
-      options: uniqueValues(jobs, "industry").map((value) => ({ label: value, value }))
-    },
-    {
-      label: "Remote",
-      name: "remote",
-      options: [
-        { label: "Remote only", value: "true" },
-        { label: "On-site", value: "false" }
-      ],
-      placeholder: "All modes"
-    },
-    {
-      label: "Skill",
-      name: "skill",
-      options: uniqueSkills(jobs).map((value) => ({ label: value, value })),
-      placeholder: "Any skill"
-    }
-  ];
+export default function JobsIndex({
+  searchParams
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
+  const filters = parseListingFilters(searchParams);
+  const collection = getContentByCategory("job");
+  const filtered = filterItems(collection, filters);
+  const page = Number(searchParams.page ?? "1") || 1;
+  const paginated = paginate(filtered, page, DEFAULT_PAGE_SIZE);
+  const options = getFilterOptions(collection);
 
   return (
-    <div className="space-y-8">
-      <StructuredData
-        data={buildBreadcrumbSchema([
-          { name: "InternshipsHub.in", path: "/" },
-          { name: "Jobs", path: "/jobs" }
-        ])}
-      />
-      <header className="space-y-4">
-        <h1 className="text-3xl font-bold text-slate-900">Entry-level jobs</h1>
-        <p className="max-w-3xl text-base text-slate-600">
-          Browse fresh graduate and early career opportunities with salary transparency.
+    <div className="flex flex-col gap-10">
+      <header className="flex flex-col gap-2">
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+          Fresher-friendly jobs ready to apply
+        </h1>
+        <p className="max-w-2xl text-sm text-slate-600">
+          Associate and analyst roles with transparent salary bands, direct company links, and Google Jobs-ready metadata.
         </p>
-        <SearchInput placeholder="Search jobs by role, company, or keyword" />
       </header>
 
-      <FilterBar filters={filterOptions} />
+      <FilterBar options={options} selected={filters} action="/jobs" total={filtered.length} />
 
-      <div className="flex items-center justify-between text-sm text-slate-600">
-        <p>
-          Showing <span className="font-semibold text-slate-900">{items.length}</span> of
-          {" "}
-          <span className="font-semibold text-slate-900">{total}</span> jobs
-        </p>
+      <div className="grid gap-6 md:grid-cols-2">
+        {paginated.items.map((item) => (
+          <JobCard key={item.frontmatter.slug} item={item} />
+        ))}
+        {!paginated.items.length && (
+          <p className="text-sm text-slate-500">
+            No jobs match these filters yet. Adjust filters or check back soon.
+          </p>
+        )}
       </div>
 
-      {items.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-slate-200 bg-white p-6 text-sm text-slate-600">
-          No jobs match your filters at the moment. Adjust the filters or explore internships.
-        </p>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          {items.map((job) => (
-            <JobCard key={`${job.type}-${job.slug}`} job={job} />
-          ))}
-        </div>
-      )}
-
-      <Pagination currentPage={currentPage} totalPages={totalPages} basePath="/jobs" params={params} />
+      <Pagination
+        page={paginated.page}
+        totalPages={paginated.totalPages}
+        basePath="/jobs"
+        searchParams={searchParams}
+      />
     </div>
   );
 }

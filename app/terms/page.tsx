@@ -1,66 +1,43 @@
 import type { Metadata } from "next";
 
-import { StructuredData } from "@/components/structured-data";
-import { buildBreadcrumbSchema } from "@/lib/schema";
-import { SITE_URL, siteConfig } from "@/lib/site";
-
-const PATH = "/terms";
-
 export const metadata: Metadata = {
-  title: "Terms & Conditions",
-  description: "Terms and conditions governing the use of InternshipsHub.in, its listings, and APIs.",
-  alternates: {
-    canonical: `${SITE_URL}${PATH}`
-  }
+  title: "Terms of Service",
+  description: "Terms governing access and use of InternshipsHub."
 };
-
-export const runtime = "edge";
 
 export default function TermsPage() {
   return (
-    <div className="space-y-6">
-      <StructuredData
-        data={buildBreadcrumbSchema([
-          { name: siteConfig.name, path: "/" },
-          { name: "Terms & Conditions", path: PATH }
-        ])}
-      />
-      <h1 className="text-3xl font-bold text-slate-900">Terms & Conditions</h1>
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold text-slate-900">Acceptance</h2>
-        <p className="text-sm text-slate-700">
-          By browsing {siteConfig.name}, submitting listings, or applying through linked employer
-          portals, you accept these Terms and Conditions.
-        </p>
-      </section>
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold text-slate-900">Permitted Use</h2>
-        <ul className="list-disc space-y-2 pl-6 text-sm text-slate-700">
-          <li>Use listings for personal career discovery or university placement support.</li>
-          <li>Share links with attribution to {siteConfig.name}.</li>
-          <li>Do not scrape or republish our structured data without prior consent.</li>
-        </ul>
-      </section>
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold text-slate-900">Content Ownership</h2>
-        <p className="text-sm text-slate-700">
-          Employers retain ownership of their job descriptions. {siteConfig.name} owns the structured
-          presentation, schema enhancements, and taxonomy applied to those descriptions.
-        </p>
-      </section>
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold text-slate-900">Limitations of Liability</h2>
-        <p className="text-sm text-slate-700">
-          We operate as an information aggregator. Decisions made on the basis of listings are solely
-          the responsibility of applicants and employers.
-        </p>
-      </section>
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold text-slate-900">Contact</h2>
-        <p className="text-sm text-slate-700">
-          For clarifications on these terms, write to <span className="font-semibold text-primary">{siteConfig.email}</span>.
-        </p>
-      </section>
-    </div>
+    <article className="prose prose-slate max-w-3xl">
+      <h1>Terms of Service</h1>
+      <p>Effective from 1 February 2026.</p>
+      <h2>Acceptance</h2>
+      <p>
+        By accessing InternshipsHub you agree to these terms. If you disagree, please discontinue use immediately.
+      </p>
+      <h2>Use of listings</h2>
+      <p>
+        Listings are provided for informational purposes. We strive for accuracy but cannot guarantee offers or hiring timelines. Do not scrape or republish listings without written permission.
+      </p>
+      <h2>Accounts and newsletters</h2>
+      <p>
+        When you subscribe to alerts you are responsible for safeguarding your email inbox. You may unsubscribe at any time. We reserve the right to suspend access for abuse.
+      </p>
+      <h2>Intellectual property</h2>
+      <p>
+        All original content, branding, and compilation data belong to InternshipsHub Media Network LLP.
+      </p>
+      <h2>Limitation of liability</h2>
+      <p>
+        We are not liable for indirect, incidental, or consequential damages arising from your use of the site or reliance on listings.
+      </p>
+      <h2>Changes</h2>
+      <p>
+        We may update these terms and will post the effective date above. Continued use constitutes acceptance.
+      </p>
+      <h2>Contact</h2>
+      <p>
+        For clarifications email <a href="mailto:legal@internshipshub.in">legal@internshipshub.in</a>.
+      </p>
+    </article>
   );
 }
