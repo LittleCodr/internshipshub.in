@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Route } from "next";
 import { Briefcase, Calendar, MapPin, Laptop, Building2 } from "lucide-react";
 
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -16,7 +17,7 @@ export function JobCard({ job }: { job: JobFrontmatter }) {
             {job.companyType.toUpperCase()} · {job.industry}
           </p>
           <h3 className="mt-1 text-lg font-semibold text-slate-900">
-            <Link href={path}>{job.title}</Link>
+            <Link href={path as unknown as Route}>{job.title}</Link>
           </h3>
           <p className="mt-2 text-sm text-slate-600">{job.description}</p>
         </div>
@@ -59,7 +60,7 @@ export function JobCard({ job }: { job: JobFrontmatter }) {
           Posted {formatDate(job.postedAt)} · {job.numberOfOpenings} openings
         </p>
         <Link
-          href={path}
+          href={path as unknown as Route}
           className="rounded-full border border-primary px-4 py-1.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white"
         >
           View & Apply

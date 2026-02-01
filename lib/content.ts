@@ -55,8 +55,8 @@ const loadJobWithContent = async (
     options: {
       parseFrontmatter: false,
       mdxOptions: {
-        remarkPlugins: [remarkGfm],
-        rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings]
+        remarkPlugins: [remarkGfm as any],
+        rehypePlugins: [rehypeSlug as any, rehypeAutolinkHeadings as any]
       }
     },
     components: mdxComponents

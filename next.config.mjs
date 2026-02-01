@@ -2,7 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    typedRoutes: true,
     mdxRs: true
   },
   pageExtensions: ["ts", "tsx", "mdx"],
