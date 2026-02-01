@@ -27,6 +27,8 @@ export const metadata: Metadata = buildListingMetadata({
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
+export const runtime = "edge";
+
 const createUrlSearchParams = (searchParams: SearchParams) => {
   const params = new URLSearchParams();
   Object.entries(searchParams).forEach(([key, value]) => {

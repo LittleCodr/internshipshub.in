@@ -12,6 +12,7 @@ export const siteConfig = {
     "remote internships india"
   ],
   email: "hello@internshipshub.in",
+  logoPath: "/logo.png",
   socials: {
     linkedin: "https://www.linkedin.com/company/internshipshub",
     twitter: "https://twitter.com/internshipshub"

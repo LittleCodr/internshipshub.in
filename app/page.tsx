@@ -4,6 +4,8 @@ import { StructuredData } from "@/components/structured-data";
 import { getAllJobs, getRemoteJobs, getTrendingJobs } from "@/lib/content";
 import { buildBreadcrumbSchema } from "@/lib/schema";
 
+export const runtime = "edge";
+
 export default async function HomePage() {
   const [latest, trending, remote] = await Promise.all([
     getAllJobs(),

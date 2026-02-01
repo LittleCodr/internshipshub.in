@@ -21,7 +21,9 @@ export const buildJobPostingSchema = (job: JobFrontmatter) => ({
     "@type": "Organization",
     name: job.company,
     sameAs: job.companyWebsite,
-    logo: job.companyLogo
+    logo: job.companyLogo.startsWith("http")
+      ? job.companyLogo
+      : toUrl(job.companyLogo)
   },
   jobLocationType: job.remote ? "TELECOMMUTE" : undefined,
   applicantLocationRequirements: {
@@ -51,6 +53,7 @@ export const buildJobPostingSchema = (job: JobFrontmatter) => ({
       unitText: job.salaryPeriod
     }
   },
+  image: job.companyLogo.startsWith("http") ? job.companyLogo : toUrl(job.companyLogo),
   occupationalCategory: job.industry,
   experienceRequirements: job.experienceRequired,
   qualifications: job.education.join(", "),
@@ -93,6 +96,7 @@ export const buildArticleSchema = (job: JobFrontmatter) => ({
   description: job.description,
   datePublished: job.publishedAt,
   dateModified: job.lastUpdated,
+  image: job.companyLogo.startsWith("http") ? job.companyLogo : toUrl(job.companyLogo),
   author: {
     "@type": "Person",
     name: job.author
@@ -110,6 +114,7 @@ export const buildOrganizationSchema = () => ({
   "@type": "Organization",
   name: siteConfig.name,
   url: SITE_URL,
+  logo: toUrl(siteConfig.logoPath),
   sameAs: Object.values(siteConfig.socials).filter(Boolean),
   contactPoint: {
     "@type": "ContactPoint",

@@ -1,4 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
+
+import { siteConfig } from "@/lib/site";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -12,9 +15,17 @@ export function SiteHeader() {
   return (
     <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold text-slate-900">
-          <span className="rounded-full bg-primary px-2 py-1 text-sm uppercase tracking-wide text-primary-foreground">
-            InternshipsHub.in
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src={siteConfig.logoPath}
+            alt={`${siteConfig.name} logo`}
+            width={32}
+            height={32}
+            className="h-8 w-8 rounded-lg"
+            priority
+          />
+          <span className="text-sm font-semibold uppercase tracking-wide text-slate-900">
+            {siteConfig.name}
           </span>
         </Link>
         <nav className="flex items-center gap-3 text-sm font-medium text-slate-600">

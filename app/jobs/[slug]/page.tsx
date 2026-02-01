@@ -15,6 +15,9 @@ export async function generateStaticParams() {
   return jobs.map((job) => ({ slug: job.slug }));
 }
 
+export const dynamicParams = false;
+export const runtime = "edge";
+
 export async function generateMetadata({
   params
 }: {

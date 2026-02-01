@@ -1,6 +1,3 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-import matter from "gray-matter";
 import { cache } from "react";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
@@ -14,43 +11,36 @@ import {
   type JobWithContent
 } from "@/lib/types";
 import { mdxComponents } from "@/components/mdx-components";
+import rawContentIndex from "@/generated/content-index.json";
 
-const CONTENT_ROOT = path.join(process.cwd(), "content");
-
-const categoryDirectoryMap: Record<ContentCategory, string> = {
-  internship: "internships",
-  job: "jobs",
-  research: "research"
+type RawEntry = {
+  frontmatter: unknown;
+  body: string;
 };
 
-const fileExtension = ".mdx";
+type RawContentIndex = Record<ContentCategory, RawEntry[]>;
 
-const getDirectoryForCategory = (category: ContentCategory) =>
-  path.join(CONTENT_ROOT, categoryDirectoryMap[category]);
+const rawIndex = rawContentIndex as RawContentIndex;
 
-const readJobFile = async (absolutePath: string) => {
-  const source = await fs.readFile(absolutePath, "utf8");
-  const { data, content } = matter(source);
-  const parsed = jobFrontmatterSchema.parse(data);
-  const expectedSlug = path.basename(absolutePath, fileExtension);
-  if (parsed.slug !== expectedSlug) {
-    throw new Error(`Slug mismatch for ${absolutePath}. Expected ${expectedSlug} but received ${parsed.slug}`);
-  }
-  return { frontmatter: parsed, body: content } satisfies {
-    frontmatter: JobFrontmatter;
-    body: string;
-  };
+const parsedIndex: Record<ContentCategory, Array<{ frontmatter: JobFrontmatter; body: string }>> = {
+  internship: rawIndex.internship.map((entry) => ({
+    frontmatter: jobFrontmatterSchema.parse(entry.frontmatter),
+    body: entry.body
+  })),
+  job: rawIndex.job.map((entry) => ({
+    frontmatter: jobFrontmatterSchema.parse(entry.frontmatter),
+    body: entry.body
+  })),
+  research: rawIndex.research.map((entry) => ({
+    frontmatter: jobFrontmatterSchema.parse(entry.frontmatter),
+    body: entry.body
+  }))
 };
 
-const loadJobWithContent = async (
-  category: ContentCategory,
-  slug: string
-): Promise<JobWithContent> => {
-  const directory = getDirectoryForCategory(category);
-  const filePath = path.join(directory, `${slug}${fileExtension}`);
-  const { frontmatter, body } = await readJobFile(filePath);
+const getCategoryEntries = (category: ContentCategory) => parsedIndex[category];
 
-  const { content } = await compileMDX<{ frontmatter: JobFrontmatter }>({
+const compileJobBody = async (body: string) =>
+  compileMDX<{ frontmatter: JobFrontmatter }>({
     source: body,
     options: {
       parseFrontmatter: false,
@@ -62,42 +52,21 @@ const loadJobWithContent = async (
     components: mdxComponents
   });
 
-  return {
-    ...frontmatter,
-    content
-  };
-};
-
-const readCategoryIndex = async (category: ContentCategory) => {
-  const directory = getDirectoryForCategory(category);
-  const files = await fs.readdir(directory);
-  const mdxFiles = files.filter((file) => file.endsWith(fileExtension));
-
-  const jobs = await Promise.all(
-    mdxFiles.map(async (filename) => {
-      const { frontmatter } = await readJobFile(path.join(directory, filename));
-      return frontmatter;
-    })
-  );
-
-  return jobs;
-};
-
 export const getAllJobs = cache(async (): Promise<JobFrontmatter[]> => {
-  const [internships, jobs, research] = await Promise.all([
-    readCategoryIndex("internship"),
-    readCategoryIndex("job"),
-    readCategoryIndex("research")
-  ]);
+  const combined = [
+    ...getCategoryEntries("internship"),
+    ...getCategoryEntries("job"),
+    ...getCategoryEntries("research")
+  ].map((entry) => entry.frontmatter);
 
-  return [...internships, ...jobs, ...research].sort((a, b) =>
-    new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
+  return combined.sort(
+    (a, b) => new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
   );
 });
 
 export const getJobsByCategory = cache(async (category: ContentCategory) => {
-  const all = await readCategoryIndex(category);
-  return all.sort(
+  const entries = getCategoryEntries(category).map((entry) => entry.frontmatter);
+  return entries.sort(
     (a, b) => new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
   );
 });
@@ -105,7 +74,20 @@ export const getJobsByCategory = cache(async (category: ContentCategory) => {
 export const getJobBySlug = cache(async (
   category: ContentCategory,
   slug: string
-): Promise<JobWithContent> => loadJobWithContent(category, slug));
+): Promise<JobWithContent> => {
+  const match = getCategoryEntries(category).find((entry) => entry.frontmatter.slug === slug);
+
+  if (!match) {
+    throw new Error(`Job with slug ${slug} not found in category ${category}`);
+  }
+
+  const { content } = await compileJobBody(match.body);
+
+  return {
+    ...match.frontmatter,
+    content
+  };
+});
 
 export const getJobPath = (job: JobFrontmatter) => {
   switch (job.type) {
