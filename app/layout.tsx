@@ -12,6 +12,7 @@ import { baseMetadata } from "@/lib/seo";
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = baseMetadata;
+export const runtime = "edge";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

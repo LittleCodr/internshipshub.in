@@ -10,12 +10,6 @@ import { getJobBySlug, getJobsByCategory, getJobPath } from "@/lib/content";
 import { buildArticleSchema, buildBreadcrumbSchema, buildJobPostingSchema } from "@/lib/schema";
 import { buildJobMetadata } from "@/lib/seo";
 
-export async function generateStaticParams() {
-  const jobs = await getJobsByCategory("job");
-  return jobs.map((job) => ({ slug: job.slug }));
-}
-
-export const dynamicParams = false;
 export const runtime = "edge";
 
 export async function generateMetadata({
