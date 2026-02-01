@@ -1,14 +1,15 @@
 # Internshipshub.in
 
-SEO-first job discovery engine for internships, jobs, and research roles across India. Built on Next.js 14 (App Router), TypeScript, Tailwind CSS, and MDX content mapped to Google JobPosting schema.
+SEO-first internship, job, and research discovery engine for India. Pages are authored in MDX, rendered with React 18 + Vite, and pre-rendered to static HTML with JSON-LD inlined for Google Jobs.
 
 ## Tech Stack
 
-- Next.js 14 with App Router and Server Components
-- TypeScript (strict) and ESLint/Prettier tooling
-- Tailwind CSS with typography plugin
-- MDX content sourced from local filesystem
-- Programmatic SEO utilities for metadata, JSON-LD, sitemaps, and robots.txt
+- React 18 with React Router v6
+- TypeScript (strict mode)
+- Vite 5 + custom static prerender pipeline
+- Tailwind CSS 3 with typography plugin
+- React Helmet Async for canonical + OpenGraph tags
+- MDX content sourced from `/content`
 
 ## Getting Started
 
@@ -17,13 +18,22 @@ npm install
 npm run dev
 ```
 
+## Build & Prerender
+
+```bash
+npm run build
+```
+
+The build step compiles the client bundle, server-renders every static and content-driven route, and emits a sitemap plus robots.txt in `dist/`.
+
 ## Content Model
 
-- Store MDX entries under `content/internships`, `content/jobs`, and `content/research`
-- Frontmatter fields align 1:1 with JobPosting schema requirements
-- Use `npm run dev` to preview pages and structured data outputs
+- MDX files live in `content/internships`, `content/jobs`, `content/research`
+- Frontmatter must include the full canonical schema documented in `src/types/content.ts`
+- JSON-LD (JobPosting, Article, Organization, BreadcrumbList) is emitted during prerender
 
-## Deployment
+## Output
 
-- Optimized for Vercel static generation
-- Dynamic sitemap and robots exposed via `/sitemap.xml` and `/robots.txt`
+- Static HTML per route under `dist/`
+- `dist/sitemap.xml` defined via frontmatter priorities
+- `public/robots.txt` advertises the sitemap
