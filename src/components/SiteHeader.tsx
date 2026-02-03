@@ -15,9 +15,12 @@ const SiteHeader = () => {
   return (
     <header className="sticky top-0 z-30 border-b border-white/10 bg-gradient-to-r from-lime-900 via-emerald-900 to-amber-800/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <NavLink to="/" className="flex items-center gap-2 text-lg font-semibold text-white">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-lime-400 to-emerald-500 text-sm font-bold text-emerald-950 shadow-lg">IH</span>
-          <span className="tracking-tight">internshipshub.in</span>
+        <NavLink to="/" className="flex items-center gap-3 text-base font-semibold text-white sm:text-lg">
+          <img src="/logo.png" alt="Internshipshub logo" className="h-9 w-9 rounded-xl border border-white/20 bg-white/95 p-1 shadow" />
+          <div className="leading-tight">
+            <span className="block text-xs uppercase tracking-[0.18em] text-amber-200">Internships & Research</span>
+            <span className="block text-[1.05rem] font-bold tracking-tight">Internshipshub.in</span>
+          </div>
         </NavLink>
         <button
           className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 text-white shadow-sm transition hover:border-white/40 hover:bg-white/10 sm:hidden"
