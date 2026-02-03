@@ -66,9 +66,9 @@ const HomePage = () => {
         />
       </Helmet>
       <JsonLd items={[breadcrumbs, websiteSchema, latestItemList, ...(organizationSchema ? [organizationSchema] : [])]} />
-      <section className="relative overflow-hidden bg-gradient-to-br from-lime-900 via-emerald-900 to-amber-800 text-white">
-        <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-amber-400/25 blur-3xl" aria-hidden />
-        <div className="absolute bottom-0 right-[-10%] h-72 w-72 rounded-full bg-lime-400/25 blur-3xl" aria-hidden />
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-lime-50 to-emerald-50 text-emerald-900">
+        <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-amber-200/40 blur-3xl" aria-hidden />
+        <div className="absolute bottom-0 right-[-10%] h-72 w-72 rounded-full bg-lime-200/40 blur-3xl" aria-hidden />
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-16 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-3xl space-y-4">
             <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 ring-1 ring-white/15">
@@ -77,30 +77,30 @@ const HomePage = () => {
             <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
               Internships &amp; Research Opportunities in India (2026) — built for students who want real work.
             </h1>
-            <p className="text-lg text-slate-100/90">
+            <p className="text-lg text-emerald-800">
               IIT, NIT, IIIT, startup, and global roles with clear outcomes, deadlines, and eligibility. No fluff. No fake listings.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
-                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-400 via-lime-400 to-emerald-500 px-5 py-3 text-sm font-semibold text-emerald-950 shadow-lg shadow-amber-300/30 transition hover:brightness-110"
+                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-200 via-lime-200 to-emerald-200 px-5 py-3 text-sm font-semibold text-emerald-900 shadow-sm ring-1 ring-emerald-200 transition hover:brightness-105"
                 href="#latest"
               >
                 Browse Latest Opportunities
               </a>
               <a
-                className="inline-flex items-center justify-center rounded-xl border border-white/25 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                className="inline-flex items-center justify-center rounded-xl border border-emerald-200 px-5 py-3 text-sm font-semibold text-emerald-900 hover:bg-white/70"
                 href="#remote"
               >
                 Explore Remote Internships
               </a>
             </div>
           </div>
-          <div className="flex w-full max-w-sm flex-col gap-3 rounded-2xl bg-white/5 p-6 text-sm text-slate-100 ring-1 ring-white/10 shadow-lg">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-200">Why students pick us</p>
+          <div className="flex w-full max-w-sm flex-col gap-3 rounded-2xl bg-white p-6 text-sm text-emerald-900 ring-1 ring-emerald-100 shadow">
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Why students pick us</p>
             <div className="grid gap-3">
-              <div className="rounded-xl bg-white/5 p-3 ring-1 ring-white/10">Verified listings, refreshed daily</div>
-              <div className="rounded-xl bg-white/5 p-3 ring-1 ring-white/10">Remote-first filters that actually work</div>
-              <div className="rounded-xl bg-white/5 p-3 ring-1 ring-white/10">Deadlines, eligibility, and stipend clarity</div>
+              <div className="rounded-xl bg-amber-50 p-3 ring-1 ring-amber-100">Verified listings, refreshed daily</div>
+              <div className="rounded-xl bg-lime-50 p-3 ring-1 ring-lime-100">Remote-first filters that actually work</div>
+              <div className="rounded-xl bg-emerald-50 p-3 ring-1 ring-emerald-100">Deadlines, eligibility, and stipend clarity</div>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ const HomePage = () => {
               <h2 className="text-2xl font-semibold text-slate-900">Fresh, verified roles updated daily</h2>
               <p className="text-sm text-slate-600">Sorted by newest first. Internal links point to complete details.</p>
             </div>
-            <a href="/internships" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-400 to-lime-500 px-4 py-2 text-sm font-semibold text-emerald-950 shadow hover:brightness-105">
+            <a href="/internships" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-200 to-lime-300 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm ring-1 ring-emerald-200 hover:brightness-105">
               View all
             </a>
           </div>
@@ -126,15 +126,15 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section id="remote" className="bg-gradient-to-br from-emerald-900 via-lime-900 to-amber-800">
+      <section id="remote" className="bg-gradient-to-br from-amber-50 via-lime-50 to-emerald-50">
         <div className="mx-auto max-w-6xl px-4 py-12">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-amber-200">Remote-first Picks</p>
-              <h2 className="text-2xl font-semibold text-white">Work from anywhere. Verified remote internships.</h2>
-              <p className="text-sm text-lime-100">Remote-only roles with clear deliverables and outcomes.</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Remote-first Picks</p>
+              <h2 className="text-2xl font-semibold text-emerald-900">Work from anywhere. Verified remote internships.</h2>
+              <p className="text-sm text-emerald-800">Remote-only roles with clear deliverables and outcomes.</p>
             </div>
-            <a href="/remote-internships" className="inline-flex items-center justify-center rounded-xl bg-white/15 px-4 py-2 text-sm font-semibold text-emerald-950 ring-1 ring-white/20 transition hover:bg-white/25">
+            <a href="/remote-internships" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-200 to-lime-200 px-4 py-2 text-sm font-semibold text-emerald-900 ring-1 ring-emerald-200 transition hover:brightness-105">
               Explore remote
             </a>
           </div>
@@ -162,12 +162,12 @@ const HomePage = () => {
             ][idx];
 
             return (
-              <div key={title} className="rounded-2xl bg-white shadow-lg ring-1 ring-lime-100">
-                <div className="h-1.5 rounded-t-2xl bg-gradient-to-r from-amber-400 via-lime-400 to-emerald-500" />
+              <div key={title} className="rounded-2xl bg-white shadow-lg ring-1 ring-emerald-100">
+                <div className="h-1.5 rounded-t-2xl bg-gradient-to-r from-amber-200 via-lime-200 to-emerald-200" />
                 <div className="p-6">
                   <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
                   <p className="mt-2 text-sm text-slate-600">{copy}</p>
-                  <a href={href} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-900 hover:text-amber-600">
+                  <a href={href} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-900 hover:text-emerald-700">
                     Browse {title.toLowerCase()}
                     <span aria-hidden>→</span>
                   </a>
@@ -214,7 +214,7 @@ const HomePage = () => {
           </div>
           <div className="col-span-2 grid gap-4 md:grid-cols-3">
             {["Discover verified opportunities", "Check eligibility & deadlines", "Apply directly to the source"].map((title, idx) => (
-              <div key={title} className="rounded-2xl bg-white p-4 shadow-lg ring-1 ring-lime-100">
+              <div key={title} className="rounded-2xl bg-white p-4 shadow-lg ring-1 ring-emerald-100">
                 <p className="text-sm font-semibold text-slate-900">{idx + 1}) {title}</p>
                 <p className="mt-2 text-sm text-slate-600">
                   {[
@@ -229,10 +229,10 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="bg-emerald-950">
-        <div className="mx-auto max-w-6xl px-4 py-12 text-lime-50">
+      <section className="bg-gradient-to-r from-amber-50 via-lime-50 to-emerald-50">
+        <div className="mx-auto max-w-6xl px-4 py-12 text-emerald-900">
           <h2 className="text-2xl font-semibold">Internships in India: what matters</h2>
-          <p className="mt-4 text-sm text-lime-100">
+          <p className="mt-4 text-sm text-emerald-800">
             Internships are short, outcome-focused roles where students work on real projects under guided mentorship. In India,
             they bridge classroom learning with industry or lab practice, shaping placement outcomes and research readiness.
             Research internships emphasize experimentation, publication, or prototypes with faculty, while industry internships
