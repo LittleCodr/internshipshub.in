@@ -1,6 +1,8 @@
 import contentIndex from "../../generated/content-index.json";
 import type { ContentEntry, ContentFrontmatter, OpportunityType } from "../types/content";
 
+const FALLBACK_LOGO = "/logos/logo.svg";
+
 interface ContentIndexRecord {
   slug: string;
   category: OpportunityType;
@@ -11,6 +13,13 @@ interface ContentIndexRecord {
 type ContentModule = {
   default: ContentEntry["component"];
 };
+
+function withDefaults(frontmatter: ContentFrontmatter): ContentFrontmatter {
+  return {
+    ...frontmatter,
+    companyLogo: frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO
+  };
+}
 
 const mdxModules = import.meta.glob<ContentModule>("@content/**/*.mdx", { eager: true });
 
@@ -26,7 +35,7 @@ const entries: ContentEntry[] = (contentIndex as ContentIndexRecord[]).map((reco
   const [, module] = matched;
 
   return {
-    frontmatter: record.frontmatter,
+    frontmatter: withDefaults(record.frontmatter),
     slug: record.slug,
     category: record.category,
     component: module.default
@@ -52,3 +61,5 @@ export function getContentBySlug(type: OpportunityType, slug: string): ContentEn
 export function getRemoteInternships(): ContentEntry[] {
   return sortEntries(entries.filter((entry) => entry.category === "internship" && entry.frontmatter.remote));
 }
+
+export { FALLBACK_LOGO };

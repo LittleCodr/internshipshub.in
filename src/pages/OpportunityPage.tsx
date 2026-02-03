@@ -5,7 +5,7 @@ import EligibilityList from "../components/EligibilityList";
 import JsonLd from "../components/JsonLd";
 import OpportunityCard from "../components/OpportunityCard";
 import OpportunitySummary from "../components/OpportunitySummary";
-import { getContentByCategory, getContentBySlug } from "../lib/content";
+import { FALLBACK_LOGO, getContentByCategory, getContentBySlug } from "../lib/content";
 import {
   buildArticleSchema,
   buildBreadcrumbSchema,
@@ -35,6 +35,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
 
   const MDXContent = entry.component;
   const { frontmatter } = entry;
+  const metaImage = frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO;
   const categoryPath = category === "internship" ? "internships" : category === "job" ? "jobs" : "research";
 
   const breadcrumbs = buildBreadcrumbSchema([
@@ -66,7 +67,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
         <meta property="og:description" content={frontmatter.description} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={frontmatter.canonicalUrl} />
-        <meta property="og:image" content={frontmatter.companyLogo} />
+        <meta property="og:image" content={metaImage} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={frontmatter.title} />
         <meta name="twitter:description" content={frontmatter.description} />

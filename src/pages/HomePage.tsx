@@ -66,63 +66,75 @@ const HomePage = () => {
         />
       </Helmet>
       <JsonLd items={[breadcrumbs, websiteSchema, latestItemList, ...(organizationSchema ? [organizationSchema] : [])]} />
-      <section className="bg-gradient-to-b from-slate-50 to-white">
-        <div className="mx-auto max-w-6xl px-4 py-16">
-          <div className="max-w-4xl space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">Homepage</p>
-            <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl">
-              Internships &amp; Research Opportunities in India (2026) | Internshipshub
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-900 text-white">
+        <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-indigo-500/30 blur-3xl" aria-hidden />
+        <div className="absolute bottom-0 right-[-10%] h-72 w-72 rounded-full bg-sky-400/20 blur-3xl" aria-hidden />
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-16 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-3xl space-y-4">
+            <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 ring-1 ring-white/15">
+              Curated, verified, student-first
+            </p>
+            <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
+              Internships &amp; Research Opportunities in India (2026) — built for students who want real work.
             </h1>
-            <h2 className="text-2xl font-semibold text-slate-900 sm:text-3xl">Find Internships That Actually Matter</h2>
-            <p className="text-lg text-slate-700">
-              Curated internships and research programs from IITs, NITs, IIITs, startups, and global companies. No spam. No fake
-              listings.
+            <p className="text-lg text-slate-100/90">
+              IIT, NIT, IIIT, startup, and global roles with clear outcomes, deadlines, and eligibility. No fluff. No fake listings.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
-                className="inline-flex items-center justify-center rounded bg-brand-accent px-5 py-3 text-sm font-semibold text-white hover:bg-blue-600"
+                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-sky-400 via-indigo-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition hover:brightness-110"
                 href="#latest"
               >
                 Browse Latest Opportunities
               </a>
               <a
-                className="inline-flex items-center justify-center rounded border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-100"
+                className="inline-flex items-center justify-center rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
                 href="#remote"
               >
                 Explore Remote Internships
               </a>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section id="latest" className="mx-auto max-w-6xl px-4 py-12">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Latest Opportunities</p>
-            <h2 className="text-2xl font-semibold text-slate-900">Fresh, verified roles updated daily</h2>
-            <p className="text-sm text-slate-600">Sorted by newest first. Internal links point to complete details.</p>
-          </div>
-          <a href="/internships" className="text-sm font-semibold text-brand-accent hover:underline">
-            View all
-          </a>
-        </div>
-        <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {latest.map((entry) => (
-            <OpportunityCard key={entry.slug} entry={entry} />
-          ))}
-        </div>
-      </section>
-
-      <section id="remote" className="bg-slate-50 py-12">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Remote-first Picks</p>
-              <h2 className="text-2xl font-semibold text-slate-900">Work from anywhere. Verified remote internships.</h2>
-              <p className="text-sm text-slate-600">Remote-only roles with clear deliverables and outcomes.</p>
+          <div className="flex w-full max-w-sm flex-col gap-3 rounded-2xl bg-white/5 p-6 text-sm text-slate-100 ring-1 ring-white/10 shadow-lg">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-200">Why students pick us</p>
+            <div className="grid gap-3">
+              <div className="rounded-xl bg-white/5 p-3 ring-1 ring-white/10">Verified listings, refreshed daily</div>
+              <div className="rounded-xl bg-white/5 p-3 ring-1 ring-white/10">Remote-first filters that actually work</div>
+              <div className="rounded-xl bg-white/5 p-3 ring-1 ring-white/10">Deadlines, eligibility, and stipend clarity</div>
             </div>
-            <a href="/remote-internships" className="text-sm font-semibold text-brand-accent hover:underline">
+          </div>
+        </div>
+      </section>
+
+      <section id="latest" className="bg-slate-50">
+        <div className="mx-auto max-w-6xl px-4 py-12">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Latest Opportunities</p>
+              <h2 className="text-2xl font-semibold text-slate-900">Fresh, verified roles updated daily</h2>
+              <p className="text-sm text-slate-600">Sorted by newest first. Internal links point to complete details.</p>
+            </div>
+            <a href="/internships" className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-800">
+              View all
+            </a>
+          </div>
+          <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {latest.map((entry) => (
+              <OpportunityCard key={entry.slug} entry={entry} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="remote" className="bg-gradient-to-br from-slate-900 via-slate-950 to-black">
+        <div className="mx-auto max-w-6xl px-4 py-12">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-indigo-200">Remote-first Picks</p>
+              <h2 className="text-2xl font-semibold text-white">Work from anywhere. Verified remote internships.</h2>
+              <p className="text-sm text-slate-200">Remote-only roles with clear deliverables and outcomes.</p>
+            </div>
+            <a href="/remote-internships" className="inline-flex items-center justify-center rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/20">
               Explore remote
             </a>
           </div>
@@ -130,7 +142,7 @@ const HomePage = () => {
             {remote.length > 0 ? (
               remote.map((entry) => <OpportunityCard key={entry.slug} entry={entry} />)
             ) : (
-              <p className="text-sm text-slate-500">Remote internships update soon. Explore all listings meanwhile.</p>
+              <p className="text-sm text-slate-200">Remote internships update soon. Explore all listings meanwhile.</p>
             )}
           </div>
         </div>
@@ -138,56 +150,39 @@ const HomePage = () => {
 
       <section className="mx-auto max-w-6xl px-4 py-12">
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-lg border border-slate-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">IIT Internships</h3>
-            <p className="mt-2 text-sm text-slate-600">Guides to IIT summer research and internship calls with timelines.</p>
-            <a href="/internships" className="mt-3 inline-flex text-sm font-semibold text-brand-accent hover:underline">
-              Browse IIT internships
-            </a>
-          </div>
-          <div className="rounded-lg border border-slate-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">NIT Internships</h3>
-            <p className="mt-2 text-sm text-slate-600">Verified NIT summer programs, eligibility, and expected deadlines.</p>
-            <a href="/internships" className="mt-3 inline-flex text-sm font-semibold text-brand-accent hover:underline">
-              Explore NIT internships
-            </a>
-          </div>
-          <div className="rounded-lg border border-slate-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">IIIT Internships</h3>
-            <p className="mt-2 text-sm text-slate-600">Remote-friendly and on-campus IIIT opportunities with clear deliverables.</p>
-            <a href="/internships" className="mt-3 inline-flex text-sm font-semibold text-brand-accent hover:underline">
-              See IIIT internships
-            </a>
-          </div>
-          <div className="rounded-lg border border-slate-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">Research Internships</h3>
-            <p className="mt-2 text-sm text-slate-600">Faculty-led, lab-driven roles with publication or prototype outcomes.</p>
-            <a href="/research" className="mt-3 inline-flex text-sm font-semibold text-brand-accent hover:underline">
-              View research internships
-            </a>
-          </div>
-          <div className="rounded-lg border border-slate-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">Paid Internships</h3>
-            <p className="mt-2 text-sm text-slate-600">Stipend-backed roles across engineering, product, and data.</p>
-            <a href="/internships" className="mt-3 inline-flex text-sm font-semibold text-brand-accent hover:underline">
-              Find paid internships
-            </a>
-          </div>
-          <div className="rounded-lg border border-slate-200 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">Remote Internships</h3>
-            <p className="mt-2 text-sm text-slate-600">Work-from-anywhere roles with defined deliverables and deadlines.</p>
-            <a href="/remote-internships" className="mt-3 inline-flex text-sm font-semibold text-brand-accent hover:underline">
-              Browse remote internships
-            </a>
-          </div>
+          {["IIT Internships", "NIT Internships", "IIIT Internships", "Research Internships", "Paid Internships", "Remote Internships"].map((title, idx) => {
+            const href = title.includes("Research") ? "/research" : title.includes("Remote") ? "/remote-internships" : "/internships";
+            const copy = [
+              "Guides to IIT summer research and internship calls with timelines.",
+              "Verified NIT summer programs, eligibility, and expected deadlines.",
+              "Remote-friendly and on-campus IIIT opportunities with clear deliverables.",
+              "Faculty-led, lab-driven roles with publication or prototype outcomes.",
+              "Stipend-backed roles across engineering, product, and data.",
+              "Work-from-anywhere roles with defined deliverables and deadlines."
+            ][idx];
+
+            return (
+              <div key={title} className="rounded-2xl bg-white shadow-lg ring-1 ring-slate-100">
+                <div className="h-1.5 rounded-t-2xl bg-gradient-to-r from-sky-400 via-indigo-500 to-fuchsia-500" />
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
+                  <p className="mt-2 text-sm text-slate-600">{copy}</p>
+                  <a href={href} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-indigo-600">
+                    Browse {title.toLowerCase()}
+                    <span aria-hidden>→</span>
+                  </a>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
-      <section className="bg-slate-50">
+      <section className="bg-gradient-to-r from-sky-50 via-white to-indigo-50">
         <div className="mx-auto max-w-6xl px-4 py-12">
           <div className="grid gap-8 md:grid-cols-2">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Why Internshipshub Exists</p>
+            <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-slate-100">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Why Internshipshub Exists</p>
               <h2 className="mt-2 text-2xl font-semibold text-slate-900">Built for clarity and trust</h2>
               <ul className="mt-4 space-y-2 text-sm text-slate-700">
                 <li>Manually curated listings</li>
@@ -197,8 +192,8 @@ const HomePage = () => {
                 <li>No corporate fluff</li>
               </ul>
             </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Who This Is For</p>
+            <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-slate-100">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Who This Is For</p>
               <h2 className="mt-2 text-2xl font-semibold text-slate-900">Students with intent</h2>
               <ul className="mt-4 space-y-2 text-sm text-slate-700">
                 <li>Engineering students</li>
@@ -218,26 +213,26 @@ const HomePage = () => {
             <h2 className="mt-2 text-2xl font-semibold text-slate-900">Apply smarter in three steps</h2>
           </div>
           <div className="col-span-2 grid gap-4 md:grid-cols-3">
-            <div className="rounded-lg border border-slate-200 p-4 shadow-sm">
-              <p className="text-sm font-semibold text-slate-900">1) Discover verified opportunities</p>
-              <p className="mt-2 text-sm text-slate-600">Fresh internships and research roles with complete metadata.</p>
-            </div>
-            <div className="rounded-lg border border-slate-200 p-4 shadow-sm">
-              <p className="text-sm font-semibold text-slate-900">2) Check eligibility & deadlines</p>
-              <p className="mt-2 text-sm text-slate-600">Clear requirements, stipend notes, and apply-by dates.</p>
-            </div>
-            <div className="rounded-lg border border-slate-200 p-4 shadow-sm">
-              <p className="text-sm font-semibold text-slate-900">3) Apply directly to the source</p>
-              <p className="mt-2 text-sm text-slate-600">No intermediaries. Direct links to official portals or emails.</p>
-            </div>
+            {["Discover verified opportunities", "Check eligibility & deadlines", "Apply directly to the source"].map((title, idx) => (
+              <div key={title} className="rounded-2xl bg-white p-4 shadow-lg ring-1 ring-slate-100">
+                <p className="text-sm font-semibold text-slate-900">{idx + 1}) {title}</p>
+                <p className="mt-2 text-sm text-slate-600">
+                  {[
+                    "Fresh internships and research roles with complete metadata.",
+                    "Clear requirements, stipend notes, and apply-by dates.",
+                    "No intermediaries. Direct links to official portals or emails."
+                  ][idx]}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-slate-50">
-        <div className="mx-auto max-w-6xl px-4 py-12">
-          <h2 className="text-2xl font-semibold text-slate-900">Internships in India: what matters</h2>
-          <p className="mt-4 text-sm text-slate-700">
+      <section className="bg-slate-900">
+        <div className="mx-auto max-w-6xl px-4 py-12 text-white">
+          <h2 className="text-2xl font-semibold">Internships in India: what matters</h2>
+          <p className="mt-4 text-sm text-slate-200">
             Internships are short, outcome-focused roles where students work on real projects under guided mentorship. In India,
             they bridge classroom learning with industry or lab practice, shaping placement outcomes and research readiness.
             Research internships emphasize experimentation, publication, or prototypes with faculty, while industry internships

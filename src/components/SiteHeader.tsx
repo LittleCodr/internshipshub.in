@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const navItems = [
@@ -9,19 +10,32 @@ const navItems = [
 ];
 
 const SiteHeader = () => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <header className="border-b border-slate-200 bg-white">
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-slate-900/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-        <NavLink to="/" className="text-lg font-semibold text-brand">
-          internshipshub.in
+        <NavLink to="/" className="flex items-center gap-2 text-lg font-semibold text-white">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-400 via-indigo-400 to-fuchsia-500 text-sm font-bold text-white shadow-lg">IH</span>
+          <span className="tracking-tight">internshipshub.in</span>
         </NavLink>
-        <nav className="flex flex-wrap gap-2 text-sm font-medium text-slate-700 sm:gap-4">
+        <button
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-white shadow-sm transition hover:border-white/30 hover:bg-white/5 sm:hidden"
+          aria-label="Toggle navigation"
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span className="sr-only">Menu</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="h-5 w-5">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+        <nav className="hidden items-center gap-2 text-sm font-medium text-white sm:flex sm:gap-3">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `rounded px-3 py-2 transition-colors ${isActive ? "bg-brand text-white" : "hover:bg-slate-100"}`
+                `rounded-xl px-3 py-2 transition ${isActive ? "bg-white text-slate-900 shadow" : "hover:bg-white/10"}`
               }
               end={item.to === "/"}
             >
@@ -30,6 +44,26 @@ const SiteHeader = () => {
           ))}
         </nav>
       </div>
+
+      {open && (
+        <div className="border-t border-white/10 bg-slate-950/90 shadow-lg backdrop-blur sm:hidden">
+          <nav className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 text-sm font-semibold text-white">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `rounded-xl px-3 py-3 transition ${isActive ? "bg-white text-slate-900" : "hover:bg-white/10"}`
+                }
+                end={item.to === "/"}
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
