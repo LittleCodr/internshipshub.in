@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Internshipshub</title>
+  <desc id="desc">Minimal favicon for internshipshub.in</desc>
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="url(#g)" />
+  <path d="M18 45V19h6v26h-6zm11 0V19h6l11 17.6V19h6v26h-6l-11-17.6V45h-6z" fill="#e2e8f0" />
+</svg>

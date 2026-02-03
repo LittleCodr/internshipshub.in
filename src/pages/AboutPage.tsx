@@ -7,15 +7,26 @@ const AboutPage = () => {
         <title>About internshipshub.in</title>
         <meta
           name="description"
-          content="Learn how internshipshub.in curates internships, fresher jobs, and research roles with a static-first SEO stack."
+          content="Learn how Internshipshub curates internships and research roles with transparent, student-first standards compliant with Google AdSense policies."
         />
       </Helmet>
       <h1 className="text-3xl font-bold text-slate-900">About internshipshub.in</h1>
-      <p className="mt-4 text-sm text-slate-600">
-        internshipshub.in is a programmatic SEO platform dedicated to helping Indian students discover meaningful internships,
-        jobs, and research fellowships. We combine MDX-based content with React 18, Vite, and an aggressive static generation
-        strategy so every page loads instantly and meets Google Jobs schema requirements.
-      </p>
+      <div className="mt-4 space-y-4 text-sm text-slate-700">
+        <p>
+          Internshipshub.in is a student-first directory of internships and research programs across India. We manually curate
+          official opportunities, annotate deadlines, and ship schema-rich pages so students can verify eligibility, stipends,
+          and application steps quickly.
+        </p>
+        <p>
+          We follow Google AdSense-friendly standards: clear navigation, original content, no misleading claims, and transparent
+          disclaimers when data is Expected/Indicative. Listings are sourced from official portals; we do not sell placements or
+          promise outcomes.
+        </p>
+        <p>
+          Contact: <a className="font-semibold text-brand-accent" href="mailto:hello@internshipshub.in">hello@internshipshub.in</a> ·
+          Phone: <a className="font-semibold text-brand-accent" href="tel:+919917191829">+91 99171 91829</a>
+        </p>
+      </div>
     </section>
   );
 };
