@@ -410,7 +410,7 @@ branchesAllowed:
   - "Interdisciplinary"
 yearOfStudy: "3rd/4th year UG or 1st year PG"
 ageLimit: "No formal limit; typical 18+"
-applyLink: "${inst.website}"
+applyLink: "https://rentits.in/blog/${slug}"
 applyMethod: external
 applicationFee: 0
 numberOfOpenings: 0
