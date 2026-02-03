@@ -13,14 +13,14 @@ const SiteHeader = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-slate-900/80 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-gradient-to-r from-lime-900 via-emerald-900 to-amber-800/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <NavLink to="/" className="flex items-center gap-2 text-lg font-semibold text-white">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-400 via-indigo-400 to-fuchsia-500 text-sm font-bold text-white shadow-lg">IH</span>
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 via-lime-400 to-emerald-500 text-sm font-bold text-emerald-950 shadow-lg">IH</span>
           <span className="tracking-tight">internshipshub.in</span>
         </NavLink>
         <button
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-white shadow-sm transition hover:border-white/30 hover:bg-white/5 sm:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 text-white shadow-sm transition hover:border-white/40 hover:bg-white/10 sm:hidden"
           aria-label="Toggle navigation"
           onClick={() => setOpen((v) => !v)}
         >
@@ -35,7 +35,7 @@ const SiteHeader = () => {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `rounded-xl px-3 py-2 transition ${isActive ? "bg-white text-slate-900 shadow" : "hover:bg-white/10"}`
+                `rounded-xl px-3 py-2 transition ${isActive ? "bg-amber-300 text-emerald-950 shadow" : "hover:bg-white/10"}`
               }
               end={item.to === "/"}
             >
@@ -46,14 +46,14 @@ const SiteHeader = () => {
       </div>
 
       {open && (
-        <div className="border-t border-white/10 bg-slate-950/90 shadow-lg backdrop-blur sm:hidden">
+        <div className="border-t border-white/10 bg-emerald-950/90 shadow-lg backdrop-blur sm:hidden">
           <nav className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 text-sm font-semibold text-white">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  `rounded-xl px-3 py-3 transition ${isActive ? "bg-white text-slate-900" : "hover:bg-white/10"}`
+                  `rounded-xl px-3 py-3 transition ${isActive ? "bg-amber-300 text-emerald-950" : "hover:bg-white/10"}`
                 }
                 end={item.to === "/"}
                 onClick={() => setOpen(false)}

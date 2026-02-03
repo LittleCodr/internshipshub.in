@@ -66,9 +66,9 @@ const HomePage = () => {
         />
       </Helmet>
       <JsonLd items={[breadcrumbs, websiteSchema, latestItemList, ...(organizationSchema ? [organizationSchema] : [])]} />
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-900 text-white">
-        <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-indigo-500/30 blur-3xl" aria-hidden />
-        <div className="absolute bottom-0 right-[-10%] h-72 w-72 rounded-full bg-sky-400/20 blur-3xl" aria-hidden />
+      <section className="relative overflow-hidden bg-gradient-to-br from-lime-900 via-emerald-900 to-amber-800 text-white">
+        <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-amber-400/25 blur-3xl" aria-hidden />
+        <div className="absolute bottom-0 right-[-10%] h-72 w-72 rounded-full bg-lime-400/25 blur-3xl" aria-hidden />
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-16 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-3xl space-y-4">
             <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 ring-1 ring-white/15">
@@ -82,13 +82,13 @@ const HomePage = () => {
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
-                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-sky-400 via-indigo-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition hover:brightness-110"
+                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-400 via-lime-400 to-emerald-500 px-5 py-3 text-sm font-semibold text-emerald-950 shadow-lg shadow-amber-300/30 transition hover:brightness-110"
                 href="#latest"
               >
                 Browse Latest Opportunities
               </a>
               <a
-                className="inline-flex items-center justify-center rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
+                className="inline-flex items-center justify-center rounded-xl border border-white/25 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
                 href="#remote"
               >
                 Explore Remote Internships
@@ -106,7 +106,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section id="latest" className="bg-slate-50">
+      <section id="latest" className="bg-gradient-to-b from-amber-50 via-white to-lime-50/60">
         <div className="mx-auto max-w-6xl px-4 py-12">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -114,7 +114,7 @@ const HomePage = () => {
               <h2 className="text-2xl font-semibold text-slate-900">Fresh, verified roles updated daily</h2>
               <p className="text-sm text-slate-600">Sorted by newest first. Internal links point to complete details.</p>
             </div>
-            <a href="/internships" className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-800">
+            <a href="/internships" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-400 to-lime-500 px-4 py-2 text-sm font-semibold text-emerald-950 shadow hover:brightness-105">
               View all
             </a>
           </div>
@@ -126,15 +126,15 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section id="remote" className="bg-gradient-to-br from-slate-900 via-slate-950 to-black">
+      <section id="remote" className="bg-gradient-to-br from-emerald-900 via-lime-900 to-amber-800">
         <div className="mx-auto max-w-6xl px-4 py-12">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-indigo-200">Remote-first Picks</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-amber-200">Remote-first Picks</p>
               <h2 className="text-2xl font-semibold text-white">Work from anywhere. Verified remote internships.</h2>
-              <p className="text-sm text-slate-200">Remote-only roles with clear deliverables and outcomes.</p>
+              <p className="text-sm text-lime-100">Remote-only roles with clear deliverables and outcomes.</p>
             </div>
-            <a href="/remote-internships" className="inline-flex items-center justify-center rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/20">
+            <a href="/remote-internships" className="inline-flex items-center justify-center rounded-xl bg-white/15 px-4 py-2 text-sm font-semibold text-emerald-950 ring-1 ring-white/20 transition hover:bg-white/25">
               Explore remote
             </a>
           </div>
@@ -162,12 +162,12 @@ const HomePage = () => {
             ][idx];
 
             return (
-              <div key={title} className="rounded-2xl bg-white shadow-lg ring-1 ring-slate-100">
-                <div className="h-1.5 rounded-t-2xl bg-gradient-to-r from-sky-400 via-indigo-500 to-fuchsia-500" />
+              <div key={title} className="rounded-2xl bg-white shadow-lg ring-1 ring-lime-100">
+                <div className="h-1.5 rounded-t-2xl bg-gradient-to-r from-amber-400 via-lime-400 to-emerald-500" />
                 <div className="p-6">
                   <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
                   <p className="mt-2 text-sm text-slate-600">{copy}</p>
-                  <a href={href} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-indigo-600">
+                  <a href={href} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-900 hover:text-amber-600">
                     Browse {title.toLowerCase()}
                     <span aria-hidden>→</span>
                   </a>
@@ -178,7 +178,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="bg-gradient-to-r from-sky-50 via-white to-indigo-50">
+      <section className="bg-gradient-to-r from-amber-50 via-white to-lime-50">
         <div className="mx-auto max-w-6xl px-4 py-12">
           <div className="grid gap-8 md:grid-cols-2">
             <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-slate-100">
@@ -214,7 +214,7 @@ const HomePage = () => {
           </div>
           <div className="col-span-2 grid gap-4 md:grid-cols-3">
             {["Discover verified opportunities", "Check eligibility & deadlines", "Apply directly to the source"].map((title, idx) => (
-              <div key={title} className="rounded-2xl bg-white p-4 shadow-lg ring-1 ring-slate-100">
+              <div key={title} className="rounded-2xl bg-white p-4 shadow-lg ring-1 ring-lime-100">
                 <p className="text-sm font-semibold text-slate-900">{idx + 1}) {title}</p>
                 <p className="mt-2 text-sm text-slate-600">
                   {[
@@ -229,10 +229,10 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="bg-slate-900">
-        <div className="mx-auto max-w-6xl px-4 py-12 text-white">
+      <section className="bg-emerald-950">
+        <div className="mx-auto max-w-6xl px-4 py-12 text-lime-50">
           <h2 className="text-2xl font-semibold">Internships in India: what matters</h2>
-          <p className="mt-4 text-sm text-slate-200">
+          <p className="mt-4 text-sm text-lime-100">
             Internships are short, outcome-focused roles where students work on real projects under guided mentorship. In India,
             they bridge classroom learning with industry or lab practice, shaping placement outcomes and research readiness.
             Research internships emphasize experimentation, publication, or prototypes with faculty, while industry internships
