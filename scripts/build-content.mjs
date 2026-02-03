@@ -24,7 +24,11 @@ async function walk(dir) {
 }
 
 async function buildIndex() {
-  const files = (await walk(contentDir)).filter((file) => file.endsWith(".mdx"));
+  const files = (await walk(contentDir)).filter((filePath) => {
+    const normalized = filePath.replace(/\\/g, "/");
+    if (normalized.includes("/templates/")) return false;
+    return normalized.endsWith(".mdx");
+  });
 
   const records = await Promise.all(
     files.map(async (filePath) => {

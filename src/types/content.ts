@@ -6,6 +6,10 @@ export type EmploymentType = "INTERN" | "FULL_TIME" | "PART_TIME" | "CONTRACT";
 export type ApplyMethod = "external" | "email" | "form";
 
 export interface ContentFrontmatter {
+  metaTitle?: string;
+  metaDescription?: string;
+  instituteType?: "IIT" | "NIT" | "IIIT";
+  year?: number;
   title: string;
   slug: string;
   description: string;

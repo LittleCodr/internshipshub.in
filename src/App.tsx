@@ -15,6 +15,7 @@ import TermsPage from "./pages/TermsPage";
 import DisclaimerPage from "./pages/DisclaimerPage";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
+import InstituteHubPage from "./pages/InstituteHubPage";
 
 const App = () => {
   return (
@@ -28,6 +29,9 @@ const App = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/internships" element={<InternshipsPage />} />
+            <Route path="/internships/iit-internships" element={<InstituteHubPage instituteType="IIT" />} />
+            <Route path="/internships/nit-internships" element={<InstituteHubPage instituteType="NIT" />} />
+            <Route path="/internships/iiit-internships" element={<InstituteHubPage instituteType="IIIT" />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/research" element={<ResearchPage />} />
             <Route path="/remote-internships" element={<RemoteInternshipsPage />} />

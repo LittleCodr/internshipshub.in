@@ -5,6 +5,9 @@ export const baseUrl = "https://internshipshub.in";
 export const staticRouteEntries: Array<{ loc: string; priority: number }> = [
   { loc: "/", priority: 1 },
   { loc: "/internships", priority: 0.9 },
+  { loc: "/internships/iit-internships", priority: 0.88 },
+  { loc: "/internships/nit-internships", priority: 0.86 },
+  { loc: "/internships/iiit-internships", priority: 0.86 },
   { loc: "/jobs", priority: 0.9 },
   { loc: "/research", priority: 0.9 },
   { loc: "/remote-internships", priority: 0.8 },
