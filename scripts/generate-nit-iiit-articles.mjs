@@ -193,7 +193,7 @@ function bodyContent(inst) {
           name: "Will there be a centralized application portal?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Some departments post calls or forms; monitor official pages in February, but do not skip faculty outreach."
+            text: "Some departments post caslls or forms; monitor official pages in February, but do not skip faculty outreach."
           }
         },
         {
