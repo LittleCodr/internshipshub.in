@@ -2,16 +2,15 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer } from "vite";
-import { SITE_URL } from "../src/lib/seo.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
 const distDir = path.resolve(projectRoot, "dist");
 
-function normalizeLoc(loc) {
+function normalizeLoc(loc, baseUrl) {
   try {
-    const url = new URL(loc, SITE_URL);
+    const url = new URL(loc, baseUrl);
     url.search = "";
     url.hash = "";
     const normalized = url.toString();
@@ -21,7 +20,7 @@ function normalizeLoc(loc) {
     return normalized;
   } catch (error) {
     console.error("Failed to normalize loc", loc, error);
-    return `${SITE_URL}/`;
+    return `${baseUrl}/`;
   }
 }
 
@@ -44,7 +43,7 @@ async function generateSitemap() {
 
   try {
     const { getAllContent } = await vite.ssrLoadModule("/src/lib/content.ts");
-    const { staticRouteEntries, opportunityPath } = await vite.ssrLoadModule("/src/lib/sitemap.ts");
+    const { staticRouteEntries, opportunityPath, baseUrl } = await vite.ssrLoadModule("/src/lib/sitemap.ts");
     const entries = getAllContent();
 
     const dynamicRoutes = entries.map((entry) => ({
@@ -63,7 +62,7 @@ async function generateSitemap() {
 
     const seen = new Set();
     const urls = allRoutes.filter((route) => {
-      const normalizedLoc = normalizeLoc(route.loc);
+      const normalizedLoc = normalizeLoc(route.loc, baseUrl);
       if (seen.has(normalizedLoc)) return false;
       seen.add(normalizedLoc);
       route.loc = normalizedLoc;
@@ -74,7 +73,7 @@ async function generateSitemap() {
       `<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">\n` +
       urls
         .map((route) => {
-          const loc = normalizeLoc(route.loc);
+          const loc = normalizeLoc(route.loc, baseUrl);
           const lastmod = isoDate(route.lastmod);
           const priority = (route.priority ?? 0.7).toFixed(1);
           return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
