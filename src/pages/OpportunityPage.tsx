@@ -77,17 +77,17 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
         <meta name="robots" content={robotsContent(frontmatter.index)} />
       </Helmet>
       <JsonLd items={structuredData} />
-      <article className="mx-auto max-w-5xl px-4 py-12">
+      <article className="mx-auto max-w-6xl px-4 py-12">
         <nav className="text-xs text-slate-500" aria-label="Breadcrumb">
           <ol className="flex flex-wrap gap-1">
             <li>
-              <a href="/" className="hover:text-brand-accent">
+              <a href="/" className="hover:text-emerald-700">
                 Home
               </a>
             </li>
             <li aria-hidden="true">/</li>
             <li>
-              <a href={`/${categoryPath}`} className="hover:text-brand-accent">
+              <a href={`/${categoryPath}`} className="hover:text-emerald-700">
                 {categoryLabels[category]}
               </a>
             </li>
@@ -95,12 +95,52 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
             <li className="text-slate-700">{frontmatter.title}</li>
           </ol>
         </nav>
-        <header className="flex flex-col gap-4 border-b border-slate-200 pb-8">
-          <p className="text-xs uppercase tracking-widest text-slate-500">{frontmatter.company}</p>
-          <h1 className="text-3xl font-bold text-slate-900">{frontmatter.title}</h1>
-          <p className="text-sm text-slate-600">{frontmatter.description}</p>
+
+        <header className="relative mt-6 overflow-hidden rounded-3xl border border-emerald-50/80 bg-gradient-to-br from-emerald-50 via-white to-amber-50 p-6 shadow-[0_22px_60px_-32px_rgba(6,95,70,0.4)]">
+          <div className="absolute right-10 top-0 h-32 w-32 rotate-12 bg-gradient-to-br from-emerald-200/40 to-cyan-200/20 blur-3xl" aria-hidden />
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-800">
+                <span className="pill">{frontmatter.type}</span>
+                <span className="pill bg-emerald-50 ring-emerald-100/80">{frontmatter.remote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</span>
+                <span className="pill bg-amber-50 ring-amber-100/80">Apply by {new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-700">{frontmatter.company}</p>
+                <h1 className="mt-1 text-3xl font-bold text-slate-900 leading-tight">{frontmatter.title}</h1>
+              </div>
+              <p className="max-w-3xl text-sm text-slate-700">{frontmatter.description}</p>
+              <div className="flex flex-wrap gap-2 text-xs text-emerald-800">
+                {frontmatter.keywords.slice(0, 6).map((kw) => (
+                  <span key={kw} className="rounded-full bg-white/90 px-3 py-1 font-semibold ring-1 ring-emerald-100">
+                    {kw}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col items-end gap-3">
+              <a
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5"
+                href="#apply"
+              >
+                Apply now
+                <span aria-hidden>↗</span>
+              </a>
+              <div className="rounded-2xl border border-emerald-100 bg-white/70 px-4 py-3 text-xs text-slate-700 shadow">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-emerald-800">Posted</span>
+                  <span>{new Date(frontmatter.postedAt).toLocaleDateString("en-IN")}</span>
+                </div>
+                <div className="mt-1 flex items-center gap-2">
+                  <span className="font-semibold text-emerald-800">Updated</span>
+                  <span>{new Date(frontmatter.lastUpdated).toLocaleDateString("en-IN")}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </header>
-        <div className="mt-8 grid gap-8 lg:grid-cols-[2fr,1fr]">
+
+        <div className="mt-10 grid gap-10 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-8">
             <OpportunitySummary data={frontmatter} />
             <EligibilityList data={frontmatter} />
@@ -108,22 +148,22 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
               <MDXContent />
             </section>
           </div>
-          <div className="space-y-6">
+          <div className="space-y-6 lg:sticky lg:top-20" id="apply">
             <ApplyCta data={frontmatter} />
-            <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+            <section className="glass-card border border-emerald-50/80 p-6 shadow-lg shadow-emerald-100/50">
               <h2 className="text-lg font-semibold text-slate-900">Listing details</h2>
-              <dl className="mt-4 space-y-3 text-xs text-slate-600">
-                <div className="flex justify-between">
-                  <dt>Posted</dt>
-                  <dd>{new Date(frontmatter.postedAt).toLocaleDateString("en-IN")}</dd>
-                </div>
+              <dl className="mt-4 space-y-3 text-sm text-slate-700">
                 <div className="flex justify-between">
                   <dt>Published</dt>
                   <dd>{new Date(frontmatter.publishedAt).toLocaleDateString("en-IN")}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt>Updated</dt>
+                  <dt>Last updated</dt>
                   <dd>{new Date(frontmatter.lastUpdated).toLocaleDateString("en-IN")}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt>Valid through</dt>
+                  <dd>{new Date(frontmatter.validThrough).toLocaleDateString("en-IN")}</dd>
                 </div>
               </dl>
             </section>
@@ -132,7 +172,12 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
       </article>
       {related.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 pb-16">
-          <h2 className="text-2xl font-semibold text-slate-900">Related opportunities</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold text-slate-900">Related opportunities</h2>
+            <a href={`/${categoryPath}`} className="text-sm font-semibold text-emerald-700 hover:text-emerald-600">
+              View all {categoryLabels[category].toLowerCase()} ↗
+            </a>
+          </div>
           <div className="mt-6 grid gap-6 md:grid-cols-3">
             {related.map((item) => (
               <OpportunityCard key={item.slug} entry={item} />
