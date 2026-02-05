@@ -126,8 +126,23 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
             aria-expanded={shareOpen}
             onClick={() => setShareOpen((prev) => !prev)}
             className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:text-emerald-800"
+            aria-label="Share"
           >
-            ✦
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="h-5 w-5 text-slate-800"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M18 8a3 3 0 1 0-3-3" />
+              <path d="M6 15a3 3 0 1 0 3 3" />
+              <path d="M18 8 9 12" />
+              <path d="M9 12l6 6" />
+            </svg>
           </button>
           {shareOpen && (
             <div className="mt-3 w-44 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg">
@@ -140,9 +155,32 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-3 py-2 transition hover:border-emerald-200 hover:bg-white"
+                    aria-label={`Share on ${item.label}`}
                   >
-                    <span>{item.label}</span>
-                    <span aria-hidden>↗</span>
+                    <span aria-hidden>
+                      {item.label === "WhatsApp" && (
+                        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+                          <path d="M12 2a10 10 0 0 0-8.9 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2Zm0 2a8 8 0 0 1 6.8 12.3l-.2.3-.6.9-1-.2-.6-.2a7.9 7.9 0 0 1-3.5-1.5c-.8-.6-2-1.8-2.7-2.8-.5-.7-1.2-1.9-1.4-2.7-.1-.6 0-1 .2-1.4l.6-.7c.3-.3.5-.4.8-.3l.3.1.4.2c.3.3.4.6.4 1l-.1.5c-.1.2-.2.5-.3.6l-.1.2c-.1.2-.1.3 0 .5.3.6.7 1.1 1.2 1.7.5.5 1.2 1 1.8 1.3.2.1.3.1.5 0l.7-.3c.4-.2.8-.3 1.1-.2.3.1.7.4 1 .7.2.3.5.6.6.9.1.3.1.6 0 .9l-.4.9-.2.4c-.1.3-.4.4-.7.5l-.4.1A8 8 0 0 1 12 4Z" />
+                        </svg>
+                      )}
+                      {item.label === "LinkedIn" && (
+                        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+                          <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 8.98h4v12H3v-12Zm7 0h3.8v1.6h.1c.5-1 1.8-2 3.6-2 3.8 0 4.5 2.4 4.5 5.6v6.8h-4v-6c0-1.4 0-3.2-2-3.2s-2.2 1.5-2.2 3.1v6.1h-4v-12Z" />
+                        </svg>
+                      )}
+                      {item.label === "X (Twitter)" && (
+                        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+                          <path d="M4 3h4.5l3.1 4.6L15.9 3H20l-6 7.2 6.6 9.8h-4.5l-3.6-5.4-4.1 5.4H4.3l6.4-7.6L4 3Z" />
+                        </svg>
+                      )}
+                      {item.label === "Email" && (
+                        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+                          <path d="M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm14.4 2H5.6L12 11.3 18.4 6Z" />
+                          <path d="m20 7.7-8 5.8-8-5.8V18h16V7.7Z" />
+                        </svg>
+                      )}
+                    </span>
+                    <span className="sr-only">{item.label}</span>
                   </a>
                 ))}
               </div>
