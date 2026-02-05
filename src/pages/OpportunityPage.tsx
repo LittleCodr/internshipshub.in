@@ -1,4 +1,5 @@
 import { Helmet } from "@lib/helmet";
+import { useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import ApplyCta from "../components/ApplyCta";
 import EligibilityList from "../components/EligibilityList";
@@ -28,6 +29,7 @@ const categoryLabels: Record<OpportunityType, string> = {
 const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const { slug } = useParams();
   const entry = slug ? getContentBySlug(category, slug) : undefined;
+  const [shareStatus, setShareStatus] = useState<string | null>(null);
 
   if (!entry) {
     return <Navigate to="/404" replace />;
@@ -59,6 +61,25 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
     .filter((item) => item.slug !== entry.slug)
     .slice(0, 3);
 
+  const handleShare = async () => {
+    const linkToShare = canonical;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: frontmatter.title, text: frontmatter.description, url: linkToShare });
+        setShareStatus("Shared");
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(linkToShare);
+        setShareStatus("Link copied");
+      } else {
+        setShareStatus("Copy not supported");
+      }
+    } catch (error) {
+      setShareStatus("Share cancelled");
+    } finally {
+      setTimeout(() => setShareStatus(null), 1800);
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -77,7 +98,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
         <meta name="robots" content={robotsContent(frontmatter.index)} />
       </Helmet>
       <JsonLd items={structuredData} />
-      <article className="mx-auto max-w-6xl px-4 py-12">
+      <article className="mx-auto max-w-6xl px-4 pt-12 pb-24">
         <nav className="text-xs text-slate-500" aria-label="Breadcrumb">
           <ol className="flex flex-wrap gap-1">
             <li>
@@ -96,23 +117,44 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
           </ol>
         </nav>
 
-        <header className="relative mt-6 overflow-hidden rounded-3xl border border-emerald-50/80 bg-gradient-to-br from-emerald-50 via-white to-amber-50 p-6 shadow-[0_22px_60px_-32px_rgba(6,95,70,0.4)]">
-          <div className="absolute right-10 top-0 h-32 w-32 rotate-12 bg-gradient-to-br from-emerald-200/40 to-cyan-200/20 blur-3xl" aria-hidden />
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-800">
-                <span className="pill">{frontmatter.type}</span>
-                <span className="pill bg-emerald-50 ring-emerald-100/80">{frontmatter.remote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</span>
-                <span className="pill bg-amber-50 ring-amber-100/80">Apply by {new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+        <header className="mt-6 rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600">
+            <div className="flex flex-wrap items-center gap-3">
+              <a href={`/${categoryPath}`} className="font-semibold text-emerald-700 hover:text-emerald-800">
+                ← Back to {categoryLabels[category]}
+              </a>
+              <span className="hidden sm:inline text-slate-300">•</span>
+              <button
+                type="button"
+                onClick={handleShare}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 font-semibold text-slate-700 transition hover:border-emerald-200 hover:text-emerald-800"
+              >
+                Share
+              </button>
+              {shareStatus && <span className="text-emerald-700">{shareStatus}</span>}
+            </div>
+            <div className="flex items-center gap-2 text-slate-500">
+              <span>Posted {new Date(frontmatter.postedAt).toLocaleDateString("en-IN")}</span>
+              <span className="text-slate-300">•</span>
+              <span>Updated {new Date(frontmatter.lastUpdated).toLocaleDateString("en-IN")}</span>
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-emerald-800">
+                <span className="pill bg-white ring-emerald-100">{frontmatter.type}</span>
+                <span className="pill bg-emerald-50 ring-emerald-100">{frontmatter.remote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</span>
+                <span className="pill bg-amber-50 ring-amber-100">Apply by {new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
               </div>
               <div>
-                <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-700">{frontmatter.company}</p>
-                <h1 className="mt-1 text-3xl font-bold text-slate-900 leading-tight">{frontmatter.title}</h1>
+                <p className="text-[11px] uppercase tracking-[0.16em] text-emerald-700">{frontmatter.company}</p>
+                <h1 className="mt-1 text-3xl font-bold leading-tight text-slate-900 md:text-4xl">{frontmatter.title}</h1>
               </div>
               <p className="max-w-3xl text-sm text-slate-700">{frontmatter.description}</p>
-              <div className="flex flex-wrap gap-2 text-xs text-emerald-800">
+              <div className="flex flex-wrap gap-2 text-xs text-slate-700">
                 {frontmatter.keywords.slice(0, 6).map((kw) => (
-                  <span key={kw} className="rounded-full bg-white/90 px-3 py-1 font-semibold ring-1 ring-emerald-100">
+                  <span key={kw} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 font-semibold">
                     {kw}
                   </span>
                 ))}
@@ -120,20 +162,20 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
             </div>
             <div className="flex flex-col items-end gap-3">
               <a
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700"
                 href="#apply"
               >
                 Apply now
                 <span aria-hidden>↗</span>
               </a>
-              <div className="rounded-2xl border border-emerald-100 bg-white/70 px-4 py-3 text-xs text-slate-700 shadow">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-700">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-emerald-800">Posted</span>
-                  <span>{new Date(frontmatter.postedAt).toLocaleDateString("en-IN")}</span>
+                  <span className="font-semibold text-slate-900">Deadline</span>
+                  <span>{new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
                 </div>
                 <div className="mt-1 flex items-center gap-2">
-                  <span className="font-semibold text-emerald-800">Updated</span>
-                  <span>{new Date(frontmatter.lastUpdated).toLocaleDateString("en-IN")}</span>
+                  <span className="font-semibold text-slate-900">Location</span>
+                  <span>{frontmatter.remote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</span>
                 </div>
               </div>
             </div>
@@ -170,6 +212,21 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
           </div>
         </div>
       </article>
+      <div className="fixed bottom-4 left-4 right-4 z-20 flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-lg shadow-emerald-200/40 lg:hidden">
+        <div>
+          <p className="text-xs font-semibold text-slate-900">Apply by {new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</p>
+          <p className="text-[11px] text-slate-600">{frontmatter.company}</p>
+        </div>
+        <a
+          href={frontmatter.applyLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700"
+        >
+          Apply
+          <span aria-hidden>↗</span>
+        </a>
+      </div>
       {related.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 pb-16">
           <div className="flex items-center justify-between">

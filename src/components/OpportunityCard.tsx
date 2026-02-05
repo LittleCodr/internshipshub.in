@@ -15,20 +15,18 @@ const OpportunityCard = ({ entry }: Props) => {
   const href = `/${frontmatter.type === "internship" ? "internships" : frontmatter.type === "job" ? "jobs" : "research"}/${entry.slug}`;
 
   return (
-    <article className="group relative flex flex-col gap-5 overflow-hidden rounded-3xl border border-white/70 bg-white/80 p-6 text-slate-900 shadow-[0_24px_60px_-28px_rgba(16,185,129,0.35)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_-30px_rgba(6,148,162,0.45)]">
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/70 via-white to-amber-50/60 opacity-90" aria-hidden />
-      <div className="absolute right-0 top-0 h-24 w-24 rotate-12 bg-gradient-to-br from-emerald-200/30 to-cyan-200/10 blur-3xl" aria-hidden />
-      <div className="relative flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-emerald-800">
-        <span className="pill bg-white/90 ring-emerald-100/60">{frontmatter.type}</span>
-        <span className="pill bg-emerald-50/80 text-emerald-900 ring-emerald-100/80">
+    <article className="group flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white/90 p-5 text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-200 hover:shadow-lg">
+      <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-emerald-800">
+        <span className="pill bg-white ring-emerald-100">{frontmatter.type}</span>
+        <span className="pill bg-emerald-50 text-emerald-900 ring-emerald-100">
           {isRemote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}
         </span>
-        <span className="pill bg-amber-50/80 text-amber-900 ring-amber-100/80">{frontmatter.duration}</span>
-        <span className="pill bg-white/80 text-emerald-800 ring-emerald-100/70">Apply by {applyBy}</span>
+        <span className="pill bg-amber-50 text-amber-900 ring-amber-100">{frontmatter.duration}</span>
+        <span className="pill bg-white text-emerald-800 ring-emerald-100">Apply by {applyBy}</span>
       </div>
 
-      <div className="relative flex items-center gap-4">
-        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-lg">
+      <div className="flex items-center gap-4">
+        <div className="h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <img
             src={logo}
             alt={`${frontmatter.company} logo`}
@@ -43,36 +41,36 @@ const OpportunityCard = ({ entry }: Props) => {
           />
         </div>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">{frontmatter.company}</p>
-          <h3 className="text-xl font-semibold text-slate-900 transition group-hover:text-emerald-700">{frontmatter.title}</h3>
-          <p className="text-sm text-emerald-700">{frontmatter.industry}</p>
+          <p className="text-[11px] uppercase tracking-[0.12em] text-emerald-700">{frontmatter.company}</p>
+          <h3 className="text-lg font-semibold text-slate-900 transition group-hover:text-emerald-700">{frontmatter.title}</h3>
+          <p className="text-sm text-slate-600">{frontmatter.industry}</p>
         </div>
       </div>
 
-      <p className="relative text-sm text-slate-700">{frontmatter.description}</p>
+      <p className="text-sm text-slate-700">{frontmatter.description}</p>
 
-      <dl className="relative grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
-        <div className="rounded-2xl border border-emerald-50 bg-white/70 px-4 py-3 shadow-sm">
-          <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Location</dt>
-          <dd className="mt-1 text-slate-800">{isRemote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</dd>
+      <dl className="grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
+        <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+          <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-emerald-700">Location</dt>
+          <dd className="mt-1 text-slate-900">{isRemote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</dd>
         </div>
-        <div className="rounded-2xl border border-emerald-50 bg-white/70 px-4 py-3 shadow-sm">
-          <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Stipend</dt>
-          <dd className="mt-1 text-slate-800">{frontmatter.stipend}</dd>
+        <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+          <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-emerald-700">Stipend</dt>
+          <dd className="mt-1 text-slate-900">{frontmatter.stipend}</dd>
         </div>
-        <div className="rounded-2xl border border-emerald-50 bg-white/70 px-4 py-3 shadow-sm">
-          <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Work mode</dt>
-          <dd className="mt-1 text-slate-800">{frontmatter.remote ? "Remote-friendly" : frontmatter.workHours}</dd>
+        <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+          <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-emerald-700">Work mode</dt>
+          <dd className="mt-1 text-slate-900">{frontmatter.remote ? "Remote-friendly" : frontmatter.workHours}</dd>
         </div>
-        <div className="rounded-2xl border border-emerald-50 bg-white/70 px-4 py-3 shadow-sm">
-          <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Apply</dt>
-          <dd className="mt-1 text-slate-800">By {applyBy}</dd>
+        <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+          <dt className="text-[11px] font-semibold uppercase tracking-[0.08em] text-emerald-700">Apply</dt>
+          <dd className="mt-1 text-slate-900">By {applyBy}</dd>
         </div>
       </dl>
 
       <Link
         to={href}
-        className="relative mt-auto inline-flex items-center justify-between rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5"
+        className="mt-auto inline-flex items-center justify-between rounded-xl border border-emerald-100 bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700"
       >
         <span>View details</span>
         <span aria-hidden className="text-base">→</span>
