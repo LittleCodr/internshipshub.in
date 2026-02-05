@@ -16,6 +16,7 @@ import DisclaimerPage from "./pages/DisclaimerPage";
 import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
 import InstituteHubPage from "./pages/InstituteHubPage";
+import PageTransition from "./components/PageTransition";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <meta name="bingbot" content="index,follow" />
       </Helmet>
       <SiteHeader />
+      <PageTransition />
       <Suspense fallback={<div className="flex flex-1 items-center justify-center">Loading…</div>}>
         <main id="main" className="flex-1">
           <Routes>
