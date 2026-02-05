@@ -25,20 +25,21 @@ const formatValue = (key: keyof ContentFrontmatter, value: ContentFrontmatter[ke
 
 const OpportunitySummary = ({ data }: Props) => {
   return (
-    <section className="rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <tbody className="divide-y divide-slate-200">
-            {summaryItems.map((item) => (
-              <tr key={item.key} className="odd:bg-slate-50">
-                <th scope="row" className="w-1/3 px-4 py-3 text-left font-semibold text-slate-600">
-                  {item.label}
-                </th>
-                <td className="px-4 py-3 text-slate-700">{formatValue(item.key, data[item.key])}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <section className="glass-card border border-emerald-50/70 p-4 shadow-lg shadow-emerald-100/50">
+      <div className="mb-3 flex items-center justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-[0.14em] text-emerald-700">Snapshot</p>
+          <h2 className="text-lg font-semibold text-slate-900">Role overview</h2>
+        </div>
+        <span className="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold text-emerald-800">Key facts</span>
+      </div>
+      <div className="grid gap-3 md:grid-cols-2">
+        {summaryItems.map((item) => (
+          <div key={item.key} className="rounded-2xl border border-emerald-50 bg-white/80 px-4 py-3 shadow-sm">
+            <p className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">{item.label}</p>
+            <p className="mt-1 text-sm font-medium text-slate-900">{formatValue(item.key, data[item.key])}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

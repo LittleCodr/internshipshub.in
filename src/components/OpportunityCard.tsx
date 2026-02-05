@@ -11,61 +11,71 @@ const OpportunityCard = ({ entry }: Props) => {
   const logo = frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO;
   const isRemote = frontmatter.remote;
 
+  const applyBy = new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  const href = `/${frontmatter.type === "internship" ? "internships" : frontmatter.type === "job" ? "jobs" : "research"}/${entry.slug}`;
+
   return (
-    <article className="group flex flex-col gap-5 rounded-2xl border border-emerald-50 bg-gradient-to-br from-amber-50 via-lime-50 to-emerald-50 p-6 text-slate-900 shadow-sm ring-1 ring-emerald-100 transition hover:-translate-y-1 hover:shadow-lg hover:ring-emerald-200">
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-800 ring-1 ring-emerald-100">
-          {frontmatter.type}
-        </span>
-        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800 ring-1 ring-emerald-100">
+    <article className="group relative flex flex-col gap-5 overflow-hidden rounded-3xl border border-white/70 bg-white/80 p-6 text-slate-900 shadow-[0_24px_60px_-28px_rgba(16,185,129,0.35)] backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_-30px_rgba(6,148,162,0.45)]">
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/70 via-white to-amber-50/60 opacity-90" aria-hidden />
+      <div className="absolute right-0 top-0 h-24 w-24 rotate-12 bg-gradient-to-br from-emerald-200/30 to-cyan-200/10 blur-3xl" aria-hidden />
+      <div className="relative flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-emerald-800">
+        <span className="pill bg-white/90 ring-emerald-100/60">{frontmatter.type}</span>
+        <span className="pill bg-emerald-50/80 text-emerald-900 ring-emerald-100/80">
           {isRemote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}
         </span>
-        <span className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800 ring-1 ring-amber-100">
-          {frontmatter.duration}
-        </span>
+        <span className="pill bg-amber-50/80 text-amber-900 ring-amber-100/80">{frontmatter.duration}</span>
+        <span className="pill bg-white/80 text-emerald-800 ring-emerald-100/70">Apply by {applyBy}</span>
       </div>
-      <div className="flex items-center gap-4">
-        <img
-          src={logo}
-          alt={`${frontmatter.company} logo`}
-          className="h-12 w-12 rounded-xl bg-white object-contain p-2 shadow ring-1 ring-emerald-100"
-          loading="lazy"
-          onError={(event) => {
-            const target = event.currentTarget;
-            if (target.src !== FALLBACK_LOGO) {
-              target.src = FALLBACK_LOGO;
-            }
-          }}
-        />
+
+      <div className="relative flex items-center gap-4">
+        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-lg">
+          <img
+            src={logo}
+            alt={`${frontmatter.company} logo`}
+            className="h-full w-full object-contain p-2"
+            loading="lazy"
+            onError={(event) => {
+              const target = event.currentTarget;
+              if (target.src !== FALLBACK_LOGO) {
+                target.src = FALLBACK_LOGO;
+              }
+            }}
+          />
+        </div>
         <div>
-          <p className="text-xs uppercase tracking-wide text-emerald-700">{frontmatter.company}</p>
-          <h3 className="text-lg font-semibold text-slate-900 group-hover:text-emerald-700">{frontmatter.title}</h3>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">{frontmatter.company}</p>
+          <h3 className="text-xl font-semibold text-slate-900 transition group-hover:text-emerald-700">{frontmatter.title}</h3>
+          <p className="text-sm text-emerald-700">{frontmatter.industry}</p>
         </div>
       </div>
-      <p className="text-sm text-slate-700">{frontmatter.description}</p>
-      <dl className="grid gap-2 text-sm text-slate-700 sm:grid-cols-2">
-        <div>
-          <dt className="font-medium text-emerald-800">Location</dt>
-          <dd>{isRemote ? "Remote" : frontmatter.city + ", " + frontmatter.state}</dd>
+
+      <p className="relative text-sm text-slate-700">{frontmatter.description}</p>
+
+      <dl className="relative grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
+        <div className="rounded-2xl border border-emerald-50 bg-white/70 px-4 py-3 shadow-sm">
+          <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Location</dt>
+          <dd className="mt-1 text-slate-800">{isRemote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</dd>
         </div>
-        <div>
-          <dt className="font-medium text-emerald-800">Stipend</dt>
-          <dd>{frontmatter.stipend}</dd>
+        <div className="rounded-2xl border border-emerald-50 bg-white/70 px-4 py-3 shadow-sm">
+          <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Stipend</dt>
+          <dd className="mt-1 text-slate-800">{frontmatter.stipend}</dd>
         </div>
-        <div>
-          <dt className="font-medium text-emerald-800">Duration</dt>
-          <dd>{frontmatter.duration}</dd>
+        <div className="rounded-2xl border border-emerald-50 bg-white/70 px-4 py-3 shadow-sm">
+          <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Work mode</dt>
+          <dd className="mt-1 text-slate-800">{frontmatter.remote ? "Remote-friendly" : frontmatter.workHours}</dd>
         </div>
-        <div>
-          <dt className="font-medium text-emerald-800">Apply by</dt>
-          <dd>{new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</dd>
+        <div className="rounded-2xl border border-emerald-50 bg-white/70 px-4 py-3 shadow-sm">
+          <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">Apply</dt>
+          <dd className="mt-1 text-slate-800">By {applyBy}</dd>
         </div>
       </dl>
+
       <Link
-        to={`/${frontmatter.type === "internship" ? "internships" : frontmatter.type === "job" ? "jobs" : "research"}/${entry.slug}`}
-        className="mt-auto inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-amber-200 via-lime-200 to-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-900 shadow transition hover:brightness-105"
+        to={href}
+        className="relative mt-auto inline-flex items-center justify-between rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5"
       >
-        View details
+        <span>View details</span>
+        <span aria-hidden className="text-base">→</span>
       </Link>
     </article>
   );
