@@ -229,59 +229,97 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="bg-gradient-to-r from-amber-50 via-lime-50 to-emerald-50">
-        <div className="mx-auto max-w-6xl px-4 py-12 text-emerald-900">
-          <h2 className="text-2xl font-semibold">Internships in India: what matters</h2>
-          <p className="mt-4 text-sm text-emerald-800">
-            Internships are short, outcome-focused roles where students work on real projects under guided mentorship. In India,
-            they bridge classroom learning with industry or lab practice, shaping placement outcomes and research readiness.
-            Research internships emphasize experimentation, publication, or prototypes with faculty, while industry internships
-            focus on product delivery and customer impact. Curated platforms beat random job boards because they filter out stale
-            or fake listings, surface deadlines clearly, and highlight eligibility up front. This reduces wasted applications and
-            improves match quality. For students comparing options, look at domain fit, mentor quality, and expected deliverables
-            alongside brand names. Remote internships expand access beyond geography but still demand disciplined communication
-            and verifiable outputs. A student-first hub that keeps everything updated and links to original sources helps you
-            apply smarter and avoid surprises.
-          </p>
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-slate-900 to-slate-950 text-slate-50">
+        <div className="absolute -left-10 top-0 h-48 w-48 rounded-full bg-emerald-400/20 blur-3xl" aria-hidden />
+        <div className="absolute right-0 bottom-0 h-56 w-56 rounded-full bg-cyan-400/15 blur-3xl" aria-hidden />
+        <div className="mx-auto max-w-6xl px-4 py-16">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-3xl space-y-3">
+              <p className="pill bg-white/10 text-emerald-50 ring-emerald-200/30">Clarity, not chaos</p>
+              <h2 className="text-3xl font-bold">Internships in India: what actually matters</h2>
+              <p className="text-sm text-slate-200">
+                We filter for verified listings, show deadlines up front, and keep canonical links intact so you can apply without chasing stale forms.
+                Research roles emphasize experiments and publication; industry roles emphasize delivery and measurable outcomes. Remote roles widen access but still need crisp communication and proofs of work.
+              </p>
+            </div>
+            <div className="grid w-full max-w-md gap-3 text-sm">
+              {["Verified weekly", "Direct source links", "JSON-LD rich data", "Remote-first filters"].map((item) => (
+                <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 shadow-sm shadow-emerald-500/10">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {[
+              {
+                title: "Curation cadence",
+                desc: "Listings refreshed weekly with apply-by dates validated against official sources.",
+                stat: "Weekly",
+                hint: "Deadlines tracked"
+              },
+              {
+                title: "Schema-rich pages",
+                desc: "JobPosting + Article + Breadcrumb JSON-LD for better crawl and preview.",
+                stat: "3x",
+                hint: "Structured data layers"
+              },
+              {
+                title: "Remote-first filters",
+                desc: "Remote, hybrid, and onsite labels surfaced with stipend clarity.",
+                stat: "Remote",
+                hint: "Work-mode first"
+              }
+            ].map((card) => (
+              <div key={card.title} className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg shadow-emerald-500/10">
+                <div className="flex items-center justify-between text-sm text-emerald-100">
+                  <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]">{card.hint}</span>
+                  <span className="text-lg font-bold text-white">{card.stat}</span>
+                </div>
+                <h3 className="mt-3 text-lg font-semibold text-white">{card.title}</h3>
+                <p className="mt-2 text-sm text-slate-200">{card.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <footer className="border-t border-slate-200 bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-12">
-          <div className="grid gap-8 md:grid-cols-3">
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-16">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-slate-900">Internshipshub</h3>
-              <ul className="mt-3 space-y-2 text-sm text-slate-700">
-                <li><a className="hover:underline" href="/about">About</a></li>
-                <li><a className="hover:underline" href="/contact">Contact</a></li>
-                <li><a className="hover:underline" href="/contact">Submit an Opportunity</a></li>
-                <li><a className="hover:underline" href="/privacy-policy">Privacy Policy</a></li>
-                <li><a className="hover:underline" href="/terms">Terms</a></li>
-              </ul>
+              <p className="pill">How we help you apply</p>
+              <h2 className="mt-2 text-2xl font-semibold text-slate-900">Three-step flow to a stronger application</h2>
+              <p className="mt-2 text-sm text-slate-600">Built for both mobile and desktop, tuned for clarity and speed.</p>
             </div>
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900">Explore</h3>
-              <ul className="mt-3 space-y-2 text-sm text-slate-700">
-                <li><a className="hover:underline" href="/internships">IIT Internships</a></li>
-                <li><a className="hover:underline" href="/internships">NIT Internships</a></li>
-                <li><a className="hover:underline" href="/internships">IIIT Internships</a></li>
-                <li><a className="hover:underline" href="/research">Research Internships</a></li>
-                <li><a className="hover:underline" href="/remote-internships">Remote Internships</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900">Popular Searches</h3>
-              <ul className="mt-3 space-y-2 text-sm text-slate-700">
-                <li>Summer Internships 2026</li>
-                <li>Paid Internships for Students</li>
-                <li>Research Internships in India</li>
-                <li>Remote Internships for Engineers</li>
-              </ul>
-            </div>
+            <a
+              href="/remote-internships"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
+            >
+              Explore remote roles <span aria-hidden>→</span>
+            </a>
           </div>
-          <p className="mt-8 text-sm text-slate-600">© Internshipshub.in — Built for students who care about real work.</p>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {["Discover verified opportunities", "Check eligibility & deadlines", "Apply with the right link"].map((title, idx) => (
+              <div key={title} className="glass-card border border-emerald-50/70 p-5 shadow-md shadow-emerald-100/50">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-800">{idx + 1}</span>
+                  <h3 className="text-base font-semibold text-slate-900">{title}</h3>
+                </div>
+                <p className="mt-3 text-sm text-slate-700">
+                  {[
+                    "Filters and search keep institutes, remote-first roles, and research fellowships easy to find.",
+                    "We surface eligibility, stipend, location, and apply-by dates so you do not waste time.",
+                    "We link to the canonical source—career portals, faculty pages, or official PDFs—no fluff."
+                  ][idx]}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </footer>
+      </section>
     </>
   );
 };
