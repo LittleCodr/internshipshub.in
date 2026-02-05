@@ -28,7 +28,7 @@ const App = () => {
       </Helmet>
       <SiteHeader />
       <Suspense fallback={<div className="flex flex-1 items-center justify-center">Loading…</div>}>
-        <main className="flex-1">
+        <main id="main" className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/internships" element={<InternshipsPage />} />

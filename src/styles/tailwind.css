@@ -1,7 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-white text-slate-900 antialiased;
+@layer base {
+  :root {
+    --surface: #ffffff;
+    --muted: #0f172a;
+    --accent-1: #f9f5ff;
+    --accent-2: #ecfeff;
+    --accent-3: #f5f3ff;
+    --stroke: rgba(15, 23, 42, 0.06);
+    color-scheme: light;
+  }
+
+  * {
+    font-family: "Plus Jakarta Sans", "Segoe UI", "Helvetica Neue", system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    @apply bg-white text-slate-900 antialiased;
+    background: radial-gradient(circle at 10% 20%, rgba(110, 231, 183, 0.25), transparent 32%),
+      radial-gradient(circle at 80% 0%, rgba(251, 191, 36, 0.2), transparent 28%),
+      radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.2), transparent 30%),
+      linear-gradient(180deg, #f8fafc 0%, #ffffff 35%, #f8fafc 100%);
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: rgba(74, 222, 128, 0.25);
+    color: #022c22;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    outline: 2px solid #34d399;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply rounded-2xl border border-white/60 bg-white/80 shadow-xl shadow-emerald-100/40 backdrop-blur;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-800 shadow-sm;
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+  }
 }
