@@ -1,0 +1,3 @@
+http://internshipshub.in/* https://internshipshub.in/:splat 301
+https://internshipshub.in/* https://internshipshub.in/:splat 200
+/* /index.html 200
