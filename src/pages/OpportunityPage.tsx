@@ -30,6 +30,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const { slug } = useParams();
   const entry = slug ? getContentBySlug(category, slug) : undefined;
   const [shareStatus, setShareStatus] = useState<string | null>(null);
+  const [shareOpen, setShareOpen] = useState(false);
 
   if (!entry) {
     return <Navigate to="/404" replace />;
@@ -60,6 +61,26 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const related = getContentByCategory(category)
     .filter((item) => item.slug !== entry.slug)
     .slice(0, 3);
+
+  const shareText = `${frontmatter.title} — ${frontmatter.company}`;
+  const shareLinks = [
+    {
+      label: "WhatsApp",
+      href: `https://wa.me/?text=${encodeURIComponent(`${shareText} ${canonical}`)}`
+    },
+    {
+      label: "LinkedIn",
+      href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonical)}`
+    },
+    {
+      label: "X (Twitter)",
+      href: `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(canonical)}`
+    },
+    {
+      label: "Email",
+      href: `mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(canonical)}`
+    }
+  ];
 
   const handleShare = async () => {
     const linkToShare = canonical;
@@ -99,6 +120,35 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
       </Helmet>
       <JsonLd items={structuredData} />
       <article className="mx-auto max-w-6xl px-4 pt-12 pb-24">
+        <div className="fixed left-3 top-1/2 z-30 -translate-y-1/2">
+          <button
+            type="button"
+            aria-expanded={shareOpen}
+            onClick={() => setShareOpen((prev) => !prev)}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:text-emerald-800"
+          >
+            ✦
+          </button>
+          {shareOpen && (
+            <div className="mt-3 w-44 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg">
+              <p className="text-xs font-semibold text-slate-700">Share</p>
+              <div className="mt-2 grid gap-2 text-sm font-semibold text-emerald-700">
+                {shareLinks.map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-3 py-2 transition hover:border-emerald-200 hover:bg-white"
+                  >
+                    <span>{item.label}</span>
+                    <span aria-hidden>↗</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
         <nav className="text-xs text-slate-500" aria-label="Breadcrumb">
           <ol className="flex flex-wrap gap-1">
             <li>
