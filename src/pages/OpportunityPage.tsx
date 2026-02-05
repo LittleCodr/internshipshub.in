@@ -120,7 +120,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
       </Helmet>
       <JsonLd items={structuredData} />
       <article className="mx-auto max-w-6xl px-4 pt-12 pb-24">
-        <div className="fixed left-3 top-1/2 z-30 -translate-y-1/2">
+        <div className="fixed left-3 top-1/2 z-30 -translate-y-1/2 hidden md:block">
           <button
             type="button"
             aria-expanded={shareOpen}
@@ -128,7 +128,21 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
             className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:text-emerald-800"
             aria-label="Share"
           >
-           <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path fill="#1976D2" d="M38.1,31.2L19.4,24l18.7-7.2c1.5-0.6,2.3-2.3,1.7-3.9c-0.6-1.5-2.3-2.3-3.9-1.7l-26,10C8.8,21.6,8,22.8,8,24s0.8,2.4,1.9,2.8l26,10c0.4,0.1,0.7,0.2,1.1,0.2c1.2,0,2.3-0.7,2.8-1.9C40.4,33.5,39.6,31.8,38.1,31.2z"/><path fill="#1E88E5" d="M11 17A7 7 0 1 0 11 31 7 7 0 1 0 11 17zM37 7A7 7 0 1 0 37 21 7 7 0 1 0 37 7zM37 27A7 7 0 1 0 37 41 7 7 0 1 0 37 27z"/></svg>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M18 8.5a3 3 0 1 0-3-3" />
+              <path d="M6 15.5a3 3 0 1 0 3 3" />
+              <path d="M18 8 9 12" />
+              <path d="m9 12 6 6" />
+            </svg>
           </button>
           {shareOpen && (
             <div className="mt-3 w-44 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg">
@@ -192,7 +206,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
         </nav>
 
         <header className="mt-6 rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600">
+          <div className="flex flex-col gap-3 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-3">
               <a href={`/${categoryPath}`} className="font-semibold text-emerald-700 hover:text-emerald-800">
                 ← Back to {categoryLabels[category]}
@@ -207,7 +221,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
               </button>
               {shareStatus && <span className="text-emerald-700">{shareStatus}</span>}
             </div>
-            <div className="flex items-center gap-2 text-slate-500">
+            <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
               <span>Posted {new Date(frontmatter.postedAt).toLocaleDateString("en-IN")}</span>
               <span className="text-slate-300">•</span>
               <span>Updated {new Date(frontmatter.lastUpdated).toLocaleDateString("en-IN")}</span>
@@ -215,7 +229,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
           </div>
 
           <div className="mt-5 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-            <div className="space-y-4">
+            <div className="space-y-4 md:max-w-3xl">
               <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-emerald-800">
                 <span className="pill bg-white ring-emerald-100">{frontmatter.type}</span>
                 <span className="pill bg-emerald-50 ring-emerald-100">{frontmatter.remote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</span>
@@ -256,7 +270,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
           </div>
         </header>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[2fr,1fr]">
+          <div className="mt-10 grid gap-8 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-8">
             <OpportunitySummary data={frontmatter} />
             <EligibilityList data={frontmatter} />
@@ -264,7 +278,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
               <MDXContent />
             </section>
           </div>
-          <div className="space-y-6 lg:sticky lg:top-20" id="apply">
+            <div className="space-y-6 lg:sticky lg:top-20" id="apply">
             <ApplyCta data={frontmatter} />
             <section className="glass-card border border-emerald-50/80 p-6 shadow-lg shadow-emerald-100/50">
               <h2 className="text-lg font-semibold text-slate-900">Listing details</h2>
