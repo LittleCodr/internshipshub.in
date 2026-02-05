@@ -22,6 +22,9 @@ const App = () => {
     <div className="flex min-h-screen flex-col bg-white text-slate-900">
       <Helmet>
         <html lang="en" />
+        <link rel="sitemap" type="application/xml" href="https://internshipshub.in/sitemap.xml" />
+        <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+        <meta name="bingbot" content="index,follow" />
       </Helmet>
       <SiteHeader />
       <Suspense fallback={<div className="flex flex-1 items-center justify-center">Loading…</div>}>

@@ -1,22 +1,26 @@
 import { FALLBACK_LOGO } from "./content";
+import { absoluteUrl, canonicalHref } from "./seo";
 import type { ContentEntry } from "../types/content";
 
 export function buildOrganizationSchema(entry: ContentEntry) {
-  const logo = entry.frontmatter.companyLogo?.trim() ? entry.frontmatter.companyLogo : FALLBACK_LOGO;
+  const logo = absoluteUrl(entry.frontmatter.companyLogo?.trim() ? entry.frontmatter.companyLogo : FALLBACK_LOGO);
+  const website = entry.frontmatter.companyWebsite ? absoluteUrl(entry.frontmatter.companyWebsite) : undefined;
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: entry.frontmatter.company,
-    url: entry.frontmatter.companyWebsite,
+    url: website,
     logo,
-    sameAs: [entry.frontmatter.companyWebsite]
+    sameAs: website ? [website] : []
   };
 }
 
 export function buildJobPostingSchema(entry: ContentEntry) {
   const { frontmatter } = entry;
   const employmentType = frontmatter.employmentType.replace("_", "-");
-  const logo = frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO;
+  const logo = absoluteUrl(frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO);
+  const canonical = canonicalHref(frontmatter.canonicalUrl);
+  const hiringSite = frontmatter.companyWebsite ? absoluteUrl(frontmatter.companyWebsite) : undefined;
 
   return {
     "@context": "https://schema.org",
@@ -30,19 +34,21 @@ export function buildJobPostingSchema(entry: ContentEntry) {
     hiringOrganization: {
       "@type": "Organization",
       name: frontmatter.company,
-      sameAs: frontmatter.companyWebsite,
+      sameAs: hiringSite,
       logo
     },
-    jobLocation: {
-      "@type": "Place",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: frontmatter.location,
-        addressLocality: frontmatter.city,
-        addressRegion: frontmatter.state,
-        addressCountry: frontmatter.country
-      }
-    },
+    jobLocation: frontmatter.remote
+      ? undefined
+      : {
+          "@type": "Place",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: frontmatter.location,
+            addressLocality: frontmatter.city,
+            addressRegion: frontmatter.state,
+            addressCountry: frontmatter.country
+          }
+        },
     applicantLocationRequirements: frontmatter.remote
       ? {
           "@type": "Country",
@@ -70,7 +76,7 @@ export function buildJobPostingSchema(entry: ContentEntry) {
     educationRequirements: frontmatter.education,
     experienceRequirements: frontmatter.experienceRequired,
     skills: frontmatter.skills,
-    url: frontmatter.canonicalUrl,
+    url: canonical,
     industry: frontmatter.industry,
     occupationalCategory: frontmatter.role
   };
@@ -91,7 +97,8 @@ export function buildBreadcrumbSchema(crumbs: Array<{ name: string; url: string 
 
 export function buildArticleSchema(entry: ContentEntry) {
   const { frontmatter } = entry;
-  const logo = frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO;
+  const logo = absoluteUrl(frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO);
+  const canonical = canonicalHref(frontmatter.canonicalUrl);
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -111,6 +118,11 @@ export function buildArticleSchema(entry: ContentEntry) {
     },
     datePublished: frontmatter.publishedAt,
     dateModified: frontmatter.lastUpdated,
-    mainEntityOfPage: frontmatter.canonicalUrl
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonical
+    },
+    image: [logo],
+    url: canonical
   };
 }

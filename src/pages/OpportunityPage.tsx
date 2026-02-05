@@ -12,7 +12,7 @@ import {
   buildJobPostingSchema,
   buildOrganizationSchema
 } from "../lib/schema";
-import { canonicalHref, robotsContent } from "../lib/seo";
+import { absoluteUrl, canonicalHref, robotsContent } from "../lib/seo";
 import type { OpportunityType } from "../types/content";
 
 interface OpportunityPageProps {
@@ -35,8 +35,9 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
 
   const MDXContent = entry.component;
   const { frontmatter } = entry;
-  const metaImage = frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO;
+  const metaImage = absoluteUrl(frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO);
   const categoryPath = category === "internship" ? "internships" : category === "job" ? "jobs" : "research";
+  const canonical = canonicalHref(frontmatter.canonicalUrl);
 
   const breadcrumbs = buildBreadcrumbSchema([
     { name: "Home", url: "https://internshipshub.in/" },
@@ -66,13 +67,13 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
         <meta property="og:title" content={frontmatter.title} />
         <meta property="og:description" content={frontmatter.description} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={frontmatter.canonicalUrl} />
+        <meta property="og:url" content={canonical} />
         <meta property="og:image" content={metaImage} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={frontmatter.title} />
         <meta name="twitter:description" content={frontmatter.description} />
         <meta name="keywords" content={frontmatter.keywords.join(", ")} />
-        <link rel="canonical" href={canonicalHref(frontmatter.canonicalUrl)} />
+        <link rel="canonical" href={canonical} />
         <meta name="robots" content={robotsContent(frontmatter.index)} />
       </Helmet>
       <JsonLd items={structuredData} />
