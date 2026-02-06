@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { getAllContent } from "../lib/content";
+import { useAuth } from "../contexts/AuthContext";
+import { useWishlist } from "../contexts/WishlistContext";
 
 const navItems = [
   { to: "/", label: "Home" },
@@ -14,7 +16,11 @@ const SiteHeader = () => {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [profileOpen, setProfileOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const { items } = useWishlist();
 
   const contentIndex = useMemo(
     () =>
@@ -142,6 +148,66 @@ const SiteHeader = () => {
             >
               <span>Post an opportunity</span>
             </NavLink>
+
+            <div className="relative hidden sm:block">
+              {user ? (
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-3 py-2 text-sm font-semibold text-emerald-900 shadow-sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setProfileOpen((v) => !v);
+                  }}
+                >
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-xs font-semibold uppercase text-white">
+                    {user.email?.[0] ?? "U"}
+                  </span>
+                  <span className="hidden md:inline">Account</span>
+                </button>
+              ) : (
+                <button
+                  className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-3 py-2 text-sm font-semibold text-emerald-900 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200"
+                  onClick={() => navigate("/auth", { state: { redirectTo: window.location.pathname } })}
+                >
+                  Sign in
+                </button>
+              )}
+
+              {profileOpen && user && (
+                <div className="absolute right-0 z-40 mt-3 w-64 rounded-2xl border border-emerald-100 bg-white p-3 text-sm shadow-xl shadow-emerald-100">
+                  <div className="flex items-center gap-3 rounded-xl border border-emerald-50 bg-emerald-50/60 px-3 py-2">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-sm font-semibold uppercase text-white">
+                      {user.email?.[0] ?? "U"}
+                    </span>
+                    <div className="leading-tight">
+                      <p className="font-semibold text-slate-900">{user.email}</p>
+                      <p className="text-[11px] text-emerald-700">Saved {items.length}</p>
+                    </div>
+                  </div>
+                  <nav className="mt-3 grid gap-2">
+                    <NavLink
+                      to="/saved"
+                      className="flex items-center justify-between rounded-xl px-3 py-2 text-emerald-800 transition hover:bg-emerald-50"
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      <span>Saved opportunities</span>
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">{items.length}</span>
+                    </NavLink>
+                    <button
+                      type="button"
+                      className="flex items-center justify-between rounded-xl px-3 py-2 text-left text-emerald-800 transition hover:bg-emerald-50"
+                      onClick={() => {
+                        signOut();
+                        setProfileOpen(false);
+                      }}
+                    >
+                      <span>Sign out</span>
+                      <span aria-hidden>↗</span>
+                    </button>
+                  </nav>
+                </div>
+              )}
+            </div>
 
             <button
               className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-emerald-100 bg-white/70 text-emerald-900 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:bg-white sm:hidden"

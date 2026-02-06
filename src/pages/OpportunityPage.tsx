@@ -7,6 +7,7 @@ import JsonLd from "../components/JsonLd";
 import OpportunityCard from "../components/OpportunityCard";
 import OpportunitySummary from "../components/OpportunitySummary";
 import { useAuth } from "../contexts/AuthContext";
+import { useWishlist } from "../contexts/WishlistContext";
 import { FALLBACK_LOGO, getContentByCategory, getContentBySlug } from "../lib/content";
 import {
   buildArticleSchema,
@@ -33,6 +34,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { isSaved, toggleSave } = useWishlist();
   const [shareStatus, setShareStatus] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
 
@@ -111,6 +113,16 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
       return;
     }
     window.open(frontmatter.applyLink, "_blank", "noopener,noreferrer");
+  };
+
+  const handleSave = () => {
+    toggleSave({
+      slug: entry.slug,
+      type: entry.category,
+      title: frontmatter.title,
+      company: frontmatter.company,
+      applyLink: frontmatter.applyLink
+    });
   };
 
   return (
@@ -243,10 +255,22 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
           <div className="mt-5 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
             <div className="space-y-4 md:max-w-3xl">
               <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-emerald-800">
-                <span className="pill bg-white ring-emerald-100">{frontmatter.type}</span>
-                <span className="pill bg-emerald-50 ring-emerald-100">{frontmatter.remote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</span>
-                <span className="pill bg-amber-50 ring-amber-100">Apply by {new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
-              </div>
+                  <span className="pill bg-white ring-emerald-100">{frontmatter.type}</span>
+                  <span className="pill bg-emerald-50 ring-emerald-100">{frontmatter.remote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</span>
+                  <span className="pill bg-amber-50 ring-amber-100">Apply by {new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+                  <button
+                    type="button"
+                    onClick={handleSave}
+                    aria-pressed={isSaved(entry.slug, entry.category)}
+                    className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] transition ${
+                      isSaved(entry.slug, entry.category)
+                        ? "border-emerald-200 bg-emerald-100 text-emerald-800"
+                        : "border-slate-200 bg-white text-emerald-800 hover:border-emerald-200"
+                    }`}
+                  >
+                    {isSaved(entry.slug, entry.category) ? "Saved" : "Save"}
+                  </button>
+                </div>
               <div>
                 <p className="text-[11px] uppercase tracking-[0.16em] text-emerald-700">{frontmatter.company}</p>
                 <h1 className="mt-1 text-3xl font-bold leading-tight text-slate-900 md:text-4xl">{frontmatter.title}</h1>
