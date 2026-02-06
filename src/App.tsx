@@ -19,6 +19,8 @@ import InstituteHubPage from "./pages/InstituteHubPage";
 import PageTransition from "./components/PageTransition";
 import AuthPage from "./pages/AuthPage";
 import SavedPage from "./pages/SavedPage";
+import ApplicationTrackerPage from "./pages/ApplicationTrackerPage";
+import ProfileSettingsPage from "./pages/ProfileSettingsPage";
 import PageViewTracker from "./components/PageViewTracker";
 
 const App = () => {
@@ -51,6 +53,8 @@ const App = () => {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/saved" element={<SavedPage />} />
+            <Route path="/tracker" element={<ApplicationTrackerPage />} />
+            <Route path="/profile" element={<ProfileSettingsPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/disclaimer" element={<DisclaimerPage />} />

@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { getAllContent } from "../lib/content";
 import { useAuth } from "../contexts/AuthContext";
 import { useWishlist } from "../contexts/WishlistContext";
+import { useProfilePreferences } from "../hooks/useProfilePreferences";
 
 const navItems = [
   { to: "/", label: "Home" },
@@ -17,9 +18,8 @@ const SiteHeader = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
-  const [alertsEnabled, setAlertsEnabled] = useState(false);
-  const [digestEnabled, setDigestEnabled] = useState(true);
-  const [themePref, setThemePref] = useState<"system" | "light" | "dark">("system");
+  const { alertsEnabled, digestEnabled, themePref, setAlertsEnabled, setDigestEnabled, cycleThemePref } =
+    useProfilePreferences();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
@@ -62,36 +62,10 @@ const SiteHeader = () => {
     }
   }, [searchOpen]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const storedAlerts = localStorage.getItem("pref:alerts");
-    const storedDigest = localStorage.getItem("pref:digest");
-    const storedTheme = localStorage.getItem("pref:theme") as "system" | "light" | "dark" | null;
-
-    if (storedAlerts) setAlertsEnabled(storedAlerts === "on");
-    if (storedDigest) setDigestEnabled(storedDigest === "on");
-    if (storedTheme) setThemePref(storedTheme);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    localStorage.setItem("pref:alerts", alertsEnabled ? "on" : "off");
-    localStorage.setItem("pref:digest", digestEnabled ? "on" : "off");
-    localStorage.setItem("pref:theme", themePref);
-  }, [alertsEnabled, digestEnabled, themePref]);
-
   const linkFor = (item: (typeof contentIndex)[number]) => {
     if (item.type === "internship") return `/internships/${item.slug}`;
     if (item.type === "job") return `/jobs/${item.slug}`;
     return `/research/${item.slug}`;
-  };
-
-  const cycleThemePref = () => {
-    setThemePref((prev) => {
-      if (prev === "system") return "dark";
-      if (prev === "dark") return "light";
-      return "system";
-    });
   };
 
   return (
@@ -240,35 +214,29 @@ const SiteHeader = () => {
                       <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">{items.length}</span>
                     </NavLink>
 
-                    <button
-                      type="button"
-                      className="flex items-center justify-between rounded-xl px-3 py-2 text-left text-emerald-800 transition hover:bg-emerald-50"
-                      onClick={() => {
-                        navigate("/saved#tracker");
-                        setProfileOpen(false);
-                      }}
+                    <NavLink
+                      to="/tracker"
+                      className="flex items-center justify-between rounded-xl px-3 py-2 text-emerald-800 transition hover:bg-emerald-50"
+                      onClick={() => setProfileOpen(false)}
                     >
                       <div>
                         <p className="font-semibold">Application tracker</p>
                         <p className="text-[11px] text-emerald-700">Mark applied, interviews, offers</p>
                       </div>
                       <span aria-hidden>↗</span>
-                    </button>
+                    </NavLink>
 
-                    <button
-                      type="button"
-                      className="flex items-center justify-between rounded-xl px-3 py-2 text-left text-emerald-800 transition hover:bg-emerald-50"
-                      onClick={() => {
-                        navigate("/auth", { state: { redirectTo: window.location.pathname } });
-                        setProfileOpen(false);
-                      }}
+                    <NavLink
+                      to="/profile"
+                      className="flex items-center justify-between rounded-xl px-3 py-2 text-emerald-800 transition hover:bg-emerald-50"
+                      onClick={() => setProfileOpen(false)}
                     >
                       <div>
                         <p className="font-semibold">Profile & preferences</p>
                         <p className="text-[11px] text-emerald-700">Update login, alerts, newsletters</p>
                       </div>
                       <span aria-hidden>⚙</span>
-                    </button>
+                    </NavLink>
 
                     <NavLink
                       to="/contact"
