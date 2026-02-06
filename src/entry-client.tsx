@@ -1,6 +1,7 @@
 import { hydrateRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "@lib/helmet";
+import { AuthProvider } from "./contexts/AuthContext";
 import App from "./App";
 import "./styles/tailwind.css";
 
@@ -11,7 +12,9 @@ if (container) {
     container,
     <HelmetProvider>
       <BrowserRouter>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </BrowserRouter>
     </HelmetProvider>
   );

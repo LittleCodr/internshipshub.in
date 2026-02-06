@@ -1,6 +1,7 @@
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 import { HelmetProvider, type HelmetServerState } from "@lib/helmet";
+import { AuthProvider } from "./contexts/AuthContext";
 import App from "./App";
 import "./styles/tailwind.css";
 
@@ -15,7 +16,9 @@ export async function render(url: string): Promise<RenderResult> {
   const html = renderToString(
     <HelmetProvider context={helmetContext}>
       <StaticRouter location={url}>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </StaticRouter>
     </HelmetProvider>
   );

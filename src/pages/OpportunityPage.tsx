@@ -1,11 +1,12 @@
 import { Helmet } from "@lib/helmet";
 import { useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import ApplyCta from "../components/ApplyCta";
 import EligibilityList from "../components/EligibilityList";
 import JsonLd from "../components/JsonLd";
 import OpportunityCard from "../components/OpportunityCard";
 import OpportunitySummary from "../components/OpportunitySummary";
+import { useAuth } from "../contexts/AuthContext";
 import { FALLBACK_LOGO, getContentByCategory, getContentBySlug } from "../lib/content";
 import {
   buildArticleSchema,
@@ -29,6 +30,9 @@ const categoryLabels: Record<OpportunityType, string> = {
 const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const { slug } = useParams();
   const entry = slug ? getContentBySlug(category, slug) : undefined;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
   const [shareStatus, setShareStatus] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
 
@@ -101,6 +105,14 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
     } finally {
       setTimeout(() => setShareStatus(null), 1800);
     }
+  };
+
+  const handleApply = () => {
+    if (!user) {
+      navigate("/auth", { state: { redirectTo: location.pathname } });
+      return;
+    }
+    window.open(frontmatter.applyLink, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -251,13 +263,14 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
               </div>
             </div>
             <div className="flex flex-col items-end gap-3">
-              <a
+              <button
+                type="button"
+                onClick={handleApply}
                 className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700"
-                href="#apply"
               >
                 Apply now
                 <span aria-hidden>↗</span>
-              </a>
+              </button>
               <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-700">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-slate-900">Deadline</span>
@@ -294,7 +307,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
             </section>
           </div>
             <div className="space-y-6 lg:sticky lg:top-20" id="apply">
-            <ApplyCta data={frontmatter} />
+              <ApplyCta data={frontmatter} onApply={handleApply} />
             <section className="glass-card border border-emerald-50/80 p-6 shadow-lg shadow-emerald-100/50">
               <h2 className="text-lg font-semibold text-slate-900">Listing details</h2>
               <dl className="mt-4 space-y-3 text-sm text-slate-700">
@@ -320,15 +333,14 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
           <p className="text-xs font-semibold text-slate-900">Apply by {new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</p>
           <p className="text-[11px] text-slate-600">{frontmatter.company}</p>
         </div>
-        <a
-          href={frontmatter.applyLink}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          onClick={handleApply}
           className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-700"
         >
           Apply
           <span aria-hidden>↗</span>
-        </a>
+        </button>
       </div>
       {related.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 pb-16">
