@@ -19,6 +19,7 @@ import InstituteHubPage from "./pages/InstituteHubPage";
 import PageTransition from "./components/PageTransition";
 import AuthPage from "./pages/AuthPage";
 import SavedPage from "./pages/SavedPage";
+import PageViewTracker from "./components/PageViewTracker";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
       </Helmet>
       <SiteHeader />
       <PageTransition />
+      <PageViewTracker />
       <Suspense fallback={<div className="flex flex-1 items-center justify-center">Loading…</div>}>
         <main id="main" className="flex-1">
           <Routes>

@@ -1,5 +1,5 @@
 import { Helmet } from "@lib/helmet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import ApplyCta from "../components/ApplyCta";
 import EligibilityList from "../components/EligibilityList";
@@ -10,6 +10,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { useToast } from "../contexts/ToastContext";
 import { useWishlist } from "../contexts/WishlistContext";
 import { FALLBACK_LOGO, getContentByCategory, getContentBySlug } from "../lib/content";
+import { subscribeToPageViews } from "../lib/pageViews";
+import { logInteraction } from "../lib/analytics";
 import {
   buildArticleSchema,
   buildBreadcrumbSchema,
@@ -38,6 +40,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const { showToast } = useToast();
   const { isSaved, toggleSave } = useWishlist();
   const [shareOpen, setShareOpen] = useState(false);
+  const [pageViews, setPageViews] = useState<number | null>(null);
 
   if (!entry) {
     return <Navigate to="/404" replace />;
@@ -48,6 +51,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const metaImage = absoluteUrl(frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO);
   const categoryPath = category === "internship" ? "internships" : category === "job" ? "jobs" : "research";
   const canonical = canonicalHref(frontmatter.canonicalUrl);
+  const saved = isSaved(entry.slug, entry.category);
 
   const breadcrumbs = buildBreadcrumbSchema([
     { name: "Home", url: "https://internshipshub.in/" },
@@ -89,6 +93,14 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
     }
   ];
 
+  useEffect(() => {
+    const pathKey = location.pathname || `/${categoryPath}/${entry.slug}`;
+    const unsubscribe = subscribeToPageViews(pathKey, setPageViews);
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [categoryPath, entry.slug, location.pathname]);
+
   const handleShare = async () => {
     const linkToShare = canonical;
     try {
@@ -116,7 +128,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   };
 
   const handleSave = () => {
-    const alreadySaved = isSaved(entry.slug, entry.category);
+    const alreadySaved = saved;
     toggleSave({
       slug: entry.slug,
       type: entry.category,
@@ -128,6 +140,11 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
       type: alreadySaved ? "info" : "success",
       description: alreadySaved ? undefined : "Find everything under Saved"
     });
+    logInteraction("save_toggle", {
+      slug: entry.slug,
+      category,
+      saved: !alreadySaved
+    }).catch(() => undefined);
   };
 
   return (
@@ -253,28 +270,49 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
               <span>Posted {new Date(frontmatter.postedAt).toLocaleDateString("en-IN")}</span>
               <span className="text-slate-300">•</span>
               <span>Updated {new Date(frontmatter.lastUpdated).toLocaleDateString("en-IN")}</span>
+              <span className="text-slate-300">•</span>
+              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-800">
+                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M1.5 12s4-7.5 10.5-7.5S22.5 12 22.5 12s-4 7.5-10.5 7.5S1.5 12 1.5 12Z" />
+                  <circle cx="12" cy="12" r="2.75" />
+                </svg>
+                {pageViews !== null ? `${pageViews.toLocaleString("en-IN") } views` : "Live views"}
+              </span>
             </div>
           </div>
 
           <div className="mt-5 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
             <div className="space-y-4 md:max-w-3xl">
               <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-emerald-800">
-                  <span className="pill bg-white ring-emerald-100">{frontmatter.type}</span>
-                  <span className="pill bg-emerald-50 ring-emerald-100">{frontmatter.remote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</span>
-                  <span className="pill bg-amber-50 ring-amber-100">Apply by {new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
-                  <button
-                    type="button"
-                    onClick={handleSave}
-                    aria-pressed={isSaved(entry.slug, entry.category)}
-                    className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] transition ${
-                      isSaved(entry.slug, entry.category)
-                        ? "border-emerald-200 bg-emerald-100 text-emerald-800"
-                        : "border-slate-200 bg-white text-emerald-800 hover:border-emerald-200"
-                    }`}
+                <span className="pill bg-white ring-emerald-100">{frontmatter.type}</span>
+                <span className="pill bg-emerald-50 ring-emerald-100">{frontmatter.remote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</span>
+                <span className="pill bg-amber-50 ring-amber-100">Apply by {new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  aria-pressed={saved}
+                  className={`group inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] transition ${
+                    saved
+                      ? "border-emerald-200 bg-emerald-100 text-emerald-900 shadow-sm shadow-emerald-100"
+                      : "border-slate-200 bg-white text-emerald-800 hover:border-emerald-200 hover:shadow-sm"
+                  }`}
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    className={`h-3.5 w-3.5 ${saved ? "fill-emerald-700 text-emerald-700" : "text-emerald-800"}`}
+                    fill={saved ? "currentColor" : "none"}
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    aria-hidden
                   >
-                    {isSaved(entry.slug, entry.category) ? "Saved" : "Save"}
-                  </button>
-                </div>
+                    <path d="M12 21s-6.5-4-9-9a5.2 5.2 0 0 1 9-4 5.2 5.2 0 0 1 9 4c-2.5 5-9 9-9 9Z" />
+                  </svg>
+                  <span>{saved ? "Saved" : "Save for later"}</span>
+                  <span className="hidden text-[10px] font-semibold uppercase tracking-[0.08em] text-emerald-700 sm:inline">
+                    syncs to profile
+                  </span>
+                </button>
+              </div>
               <div>
                 <p className="text-[11px] uppercase tracking-[0.16em] text-emerald-700">{frontmatter.company}</p>
                 <h1 className="mt-1 text-3xl font-bold leading-tight text-slate-900 md:text-4xl">{frontmatter.title}</h1>
