@@ -2,6 +2,7 @@ import { hydrateRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "@lib/helmet";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ToastProvider } from "./contexts/ToastContext";
 import { WishlistProvider } from "./contexts/WishlistContext";
 import App from "./App";
 import "./styles/tailwind.css";
@@ -13,11 +14,13 @@ if (container) {
     container,
     <HelmetProvider>
       <BrowserRouter>
-        <AuthProvider>
-          <WishlistProvider>
-            <App />
-          </WishlistProvider>
-        </AuthProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <WishlistProvider>
+              <App />
+            </WishlistProvider>
+          </AuthProvider>
+        </ToastProvider>
       </BrowserRouter>
     </HelmetProvider>
   );

@@ -7,6 +7,7 @@ import JsonLd from "../components/JsonLd";
 import OpportunityCard from "../components/OpportunityCard";
 import OpportunitySummary from "../components/OpportunitySummary";
 import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../contexts/ToastContext";
 import { useWishlist } from "../contexts/WishlistContext";
 import { FALLBACK_LOGO, getContentByCategory, getContentBySlug } from "../lib/content";
 import {
@@ -34,8 +35,8 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { showToast } = useToast();
   const { isSaved, toggleSave } = useWishlist();
-  const [shareStatus, setShareStatus] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
 
   if (!entry) {
@@ -93,22 +94,21 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
     try {
       if (navigator.share) {
         await navigator.share({ title: frontmatter.title, text: frontmatter.description, url: linkToShare });
-        setShareStatus("Shared");
+        showToast("Shared", { type: "success" });
       } else if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(linkToShare);
-        setShareStatus("Link copied");
+        showToast("Link copied", { type: "success" });
       } else {
-        setShareStatus("Copy not supported");
+        showToast("Sharing is not supported here", { type: "info" });
       }
     } catch (error) {
-      setShareStatus("Share cancelled");
-    } finally {
-      setTimeout(() => setShareStatus(null), 1800);
+      showToast("Share cancelled", { type: "info" });
     }
   };
 
   const handleApply = () => {
     if (!user) {
+      showToast("Sign in to apply", { type: "info" });
       navigate("/auth", { state: { redirectTo: location.pathname } });
       return;
     }
@@ -116,12 +116,17 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   };
 
   const handleSave = () => {
+    const alreadySaved = isSaved(entry.slug, entry.category);
     toggleSave({
       slug: entry.slug,
       type: entry.category,
       title: frontmatter.title,
       company: frontmatter.company,
       applyLink: frontmatter.applyLink
+    });
+    showToast(alreadySaved ? "Removed from saved" : "Saved to your list", {
+      type: alreadySaved ? "info" : "success",
+      description: alreadySaved ? undefined : "Find everything under Saved"
     });
   };
 
@@ -243,7 +248,6 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
               >
                 Share
               </button>
-              {shareStatus && <span className="text-emerald-700">{shareStatus}</span>}
             </div>
             <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
               <span>Posted {new Date(frontmatter.postedAt).toLocaleDateString("en-IN")}</span>

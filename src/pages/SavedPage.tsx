@@ -1,10 +1,12 @@
 import { Helmet } from "@lib/helmet";
 import OpportunityCard from "../components/OpportunityCard";
+import { useToast } from "../contexts/ToastContext";
 import { useWishlist } from "../contexts/WishlistContext";
 import { getContentByCategory } from "../lib/content";
 
 const SavedPage = () => {
   const { items, remove } = useWishlist();
+  const { showToast } = useToast();
 
   const resolved = items
     .map((saved) => {
@@ -40,7 +42,10 @@ const SavedPage = () => {
             <OpportunityCard entry={entry} />
             <button
               type="button"
-              onClick={() => remove(entry.slug, entry.category)}
+              onClick={() => {
+                remove(entry.slug, entry.category);
+                showToast("Removed from saved", { type: "info" });
+              }}
               className="absolute right-3 top-3 rounded-full bg-white/90 px-2 py-1 text-xs font-semibold text-rose-600 shadow-sm transition hover:-translate-y-0.5"
             >
               Remove
