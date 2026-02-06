@@ -59,7 +59,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = (): AuthContextValue => {
   const ctx = useContext(AuthContext);
   if (!ctx) {
-    throw new Error("useAuth must be used within AuthProvider");
+    if (import.meta.env?.DEV) {
+      console.warn("useAuth called outside AuthProvider; returning fallback");
+    }
+    return {
+      user: null,
+      loading: false,
+      signIn: async () => Promise.reject(new Error("Auth is unavailable outside provider")),
+      signUp: async () => Promise.reject(new Error("Auth is unavailable outside provider")),
+      signInWithGoogle: async () => Promise.reject(new Error("Auth is unavailable outside provider")),
+      signOut: async () => Promise.resolve()
+    };
   }
   return ctx;
 };
