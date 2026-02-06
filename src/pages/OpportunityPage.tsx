@@ -58,6 +58,8 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
     breadcrumbs
   ];
 
+  const schemaPreview = (structuredData as Array<Record<string, unknown>>).find((item) => item["@type"] === "JobPosting") ?? structuredData[0];
+
   const related = getContentByCategory(category)
     .filter((item) => item.slug !== entry.slug)
     .slice(0, 3);
@@ -269,6 +271,19 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
             </div>
           </div>
         </header>
+
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/80 p-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.12em] text-emerald-700">Internship Details</p>
+              <h2 className="text-sm font-semibold text-slate-900">Key Information about this internship</h2>
+            </div>
+            <span className="rounded-full border border-emerald-100 bg-white px-3 py-1 text-[11px] font-semibold text-emerald-800">Google-friendly</span>
+          </div>
+          <pre className="mt-3 max-h-64 overflow-auto rounded-xl bg-slate-900 px-3 py-3 text-[11px] leading-snug text-emerald-50 shadow-inner">
+            {JSON.stringify(schemaPreview, null, 2)}
+          </pre>
+        </section>
 
           <div className="mt-10 grid gap-8 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-8">

@@ -39,6 +39,11 @@
     outline: 2px solid #34d399;
     outline-offset: 2px;
   }
+
+  /* Hide raw JSON-LD blocks that may leak into rendered prose */
+  .prose script[type="application/ld+json"] {
+    display: none !important;
+  }
 }
 
 @layer components {
