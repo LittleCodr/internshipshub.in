@@ -51,8 +51,8 @@ const SiteFooter = () => {
               <Link to="/contact" className="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:-translate-y-0.5">
                 Reach out
               </Link>
-              <a href="mailto:hello@internshipshub.in" className="block text-sm text-emerald-100 underline hover:text-white">
-                hello@internshipshub.in
+              <a href="mailto:tacaz956@gmail.com" className="block text-sm text-emerald-100 underline hover:text-white">
+                tacaz956@gmail.com
               </a>
             </div>
           </div>

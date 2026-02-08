@@ -21,7 +21,7 @@ const DisclaimerPage = () => {
           Ads or sponsored placements, if present, will be labeled and do not influence editorial decisions.
         </p>
         <p>
-          Contact: <a className="font-semibold text-brand-accent" href="mailto:hello@internshipshub.in">hello@internshipshub.in</a> ·
+          Contact: <a className="font-semibold text-brand-accent" href="mailto:tacaz956@gmail.com">tacaz956@gmail.com</a> ·
           Phone: <a className="font-semibold text-brand-accent" href="tel:+919917191829">+91 99171 91829</a>
         </p>
       </div>
