@@ -66,12 +66,12 @@ const HomePage = () => {
         />
       </Helmet>
       <JsonLd items={[breadcrumbs, websiteSchema, latestItemList, ...(organizationSchema ? [organizationSchema] : [])]} />
-      <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-lime-50 to-emerald-50 text-emerald-900">
-        <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-amber-200/40 blur-3xl" aria-hidden />
-        <div className="absolute bottom-0 right-[-10%] h-72 w-72 rounded-full bg-lime-200/40 blur-3xl" aria-hidden />
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-white to-emerald-50 text-emerald-900">
+        <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-amber-100/30 blur-3xl" aria-hidden />
+        <div className="absolute bottom-0 right-[-10%] h-72 w-72 rounded-full bg-lime-100/30 blur-3xl" aria-hidden />
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-16 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-3xl space-y-4">
-            <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-100 ring-1 ring-white/15">
+            <p className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-800 ring-1 ring-emerald-100">
               Curated, verified, student-first
             </p>
             <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
@@ -82,13 +82,13 @@ const HomePage = () => {
             </p>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
-                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-200 via-lime-200 to-emerald-200 px-5 py-3 text-sm font-semibold text-emerald-900 shadow-sm ring-1 ring-emerald-200 transition hover:brightness-105"
+                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-100 via-lime-100 to-emerald-100 px-5 py-3 text-sm font-semibold text-emerald-900 shadow-sm ring-1 ring-emerald-100 transition hover:brightness-110"
                 href="#latest"
               >
                 Browse Latest Opportunities
               </a>
               <a
-                className="inline-flex items-center justify-center rounded-xl border border-emerald-200 px-5 py-3 text-sm font-semibold text-emerald-900 hover:bg-white/70"
+                className="inline-flex items-center justify-center rounded-xl border border-emerald-100 bg-white/80 px-5 py-3 text-sm font-semibold text-emerald-900 hover:bg-white"
                 href="#remote"
               >
                 Explore Remote Internships
@@ -98,15 +98,15 @@ const HomePage = () => {
           <div className="flex w-full max-w-sm flex-col gap-3 rounded-2xl bg-white p-6 text-sm text-emerald-900 ring-1 ring-emerald-100 shadow">
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Why students pick us</p>
             <div className="grid gap-3">
-              <div className="rounded-xl bg-amber-50 p-3 ring-1 ring-amber-100">Verified listings, refreshed daily</div>
-              <div className="rounded-xl bg-lime-50 p-3 ring-1 ring-lime-100">Remote-first filters that actually work</div>
-              <div className="rounded-xl bg-emerald-50 p-3 ring-1 ring-emerald-100">Deadlines, eligibility, and stipend clarity</div>
+              <div className="rounded-xl bg-amber-50/70 p-3 ring-1 ring-amber-100">Verified listings, refreshed daily</div>
+              <div className="rounded-xl bg-lime-50/70 p-3 ring-1 ring-lime-100">Remote-first filters that actually work</div>
+              <div className="rounded-xl bg-emerald-50/70 p-3 ring-1 ring-emerald-100">Deadlines, eligibility, and stipend clarity</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="latest" className="bg-gradient-to-b from-amber-50 via-white to-lime-50/60">
+      <section id="latest" className="bg-gradient-to-b from-amber-50 via-white to-lime-50">
         <div className="mx-auto max-w-6xl px-4 py-12">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -114,7 +114,7 @@ const HomePage = () => {
               <h2 className="text-2xl font-semibold text-slate-900">Fresh, verified roles updated daily</h2>
               <p className="text-sm text-slate-600">Sorted by newest first. Internal links point to complete details.</p>
             </div>
-            <a href="/internships" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-200 to-lime-300 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm ring-1 ring-emerald-200 hover:brightness-105">
+            <a href="/internships" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-100 to-lime-200 px-4 py-2 text-sm font-semibold text-emerald-900 shadow-sm ring-1 ring-emerald-100 hover:brightness-110">
               View all
             </a>
           </div>
@@ -134,7 +134,7 @@ const HomePage = () => {
               <h2 className="text-2xl font-semibold text-emerald-900">Work from anywhere. Verified remote internships.</h2>
               <p className="text-sm text-emerald-800">Remote-only roles with clear deliverables and outcomes.</p>
             </div>
-            <a href="/remote-internships" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-200 to-lime-200 px-4 py-2 text-sm font-semibold text-emerald-900 ring-1 ring-emerald-200 transition hover:brightness-105">
+            <a href="/remote-internships" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-100 to-lime-100 px-4 py-2 text-sm font-semibold text-emerald-900 ring-1 ring-emerald-100 transition hover:brightness-110">
               Explore remote
             </a>
           </div>
@@ -163,7 +163,7 @@ const HomePage = () => {
 
             return (
               <div key={title} className="rounded-2xl bg-white shadow-lg ring-1 ring-emerald-100">
-                <div className="h-1.5 rounded-t-2xl bg-gradient-to-r from-amber-200 via-lime-200 to-emerald-200" />
+                <div className="h-1.5 rounded-t-2xl bg-gradient-to-r from-amber-100 via-lime-100 to-emerald-100" />
                 <div className="p-6">
                   <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
                   <p className="mt-2 text-sm text-slate-600">{copy}</p>
@@ -229,22 +229,22 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-slate-900 to-slate-950 text-slate-50">
-        <div className="absolute -left-10 top-0 h-48 w-48 rounded-full bg-emerald-400/20 blur-3xl" aria-hidden />
-        <div className="absolute right-0 bottom-0 h-56 w-56 rounded-full bg-cyan-400/15 blur-3xl" aria-hidden />
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-lime-50 text-emerald-900">
+        <div className="absolute -left-10 top-0 h-48 w-48 rounded-full bg-emerald-100/30 blur-3xl" aria-hidden />
+        <div className="absolute right-0 bottom-0 h-56 w-56 rounded-full bg-cyan-100/30 blur-3xl" aria-hidden />
         <div className="mx-auto max-w-6xl px-4 py-16">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="max-w-3xl space-y-3">
-              <p className="pill bg-white/10 text-emerald-50 ring-emerald-200/30">Clarity, not chaos</p>
-              <h2 className="text-3xl font-bold">Internships in India: what actually matters</h2>
-              <p className="text-sm text-slate-200">
+              <p className="pill bg-white/80 text-emerald-800 ring-emerald-100">Clarity, not chaos</p>
+              <h2 className="text-3xl font-bold text-emerald-900">Internships in India: what actually matters</h2>
+              <p className="text-sm text-emerald-800">
                 We filter for verified listings, show deadlines up front, and keep canonical links intact so you can apply without chasing stale forms.
                 Research roles emphasize experiments and publication; industry roles emphasize delivery and measurable outcomes. Remote roles widen access but still need crisp communication and proofs of work.
               </p>
             </div>
             <div className="grid w-full max-w-md gap-3 text-sm">
               {["Verified weekly", "Direct source links", "JSON-LD rich data", "Remote-first filters"].map((item) => (
-                <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 shadow-sm shadow-emerald-500/10">
+                <div key={item} className="rounded-2xl border border-emerald-100 bg-white px-4 py-3 shadow-sm">
                   {item}
                 </div>
               ))}
@@ -272,13 +272,13 @@ const HomePage = () => {
                 hint: "Work-mode first"
               }
             ].map((card) => (
-              <div key={card.title} className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg shadow-emerald-500/10">
-                <div className="flex items-center justify-between text-sm text-emerald-100">
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]">{card.hint}</span>
-                  <span className="text-lg font-bold text-white">{card.stat}</span>
+              <div key={card.title} className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-md">
+                <div className="flex items-center justify-between text-sm text-emerald-800">
+                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]">{card.hint}</span>
+                  <span className="text-lg font-bold text-emerald-900">{card.stat}</span>
                 </div>
-                <h3 className="mt-3 text-lg font-semibold text-white">{card.title}</h3>
-                <p className="mt-2 text-sm text-slate-200">{card.desc}</p>
+                <h3 className="mt-3 text-lg font-semibold text-emerald-900">{card.title}</h3>
+                <p className="mt-2 text-sm text-emerald-800">{card.desc}</p>
               </div>
             ))}
           </div>
