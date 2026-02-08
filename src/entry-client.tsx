@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "@lib/helmet";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
-import { WishlistProvider } from "./contexts/WishlistContext";
+import { UserDataProvider } from "./contexts/UserDataContext";
 import App from "./App";
 import "./styles/tailwind.css";
 
@@ -16,9 +16,9 @@ if (container) {
       <BrowserRouter>
         <ToastProvider>
           <AuthProvider>
-            <WishlistProvider>
+            <UserDataProvider>
               <App />
-            </WishlistProvider>
+            </UserDataProvider>
           </AuthProvider>
         </ToastProvider>
       </BrowserRouter>

@@ -18,8 +18,11 @@ import SiteFooter from "./components/SiteFooter";
 import InstituteHubPage from "./pages/InstituteHubPage";
 import PageTransition from "./components/PageTransition";
 import AuthPage from "./pages/AuthPage";
+import DashboardPage from "./pages/DashboardPage";
 import SavedPage from "./pages/SavedPage";
 import ApplicationTrackerPage from "./pages/ApplicationTrackerPage";
+import JobAlertsPage from "./pages/JobAlertsPage";
+import ProfilePage from "./pages/ProfilePage";
 import ProfileSettingsPage from "./pages/ProfileSettingsPage";
 import PageViewTracker from "./components/PageViewTracker";
 
@@ -46,6 +49,7 @@ const App = () => {
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/research" element={<ResearchPage />} />
             <Route path="/remote-internships" element={<RemoteInternshipsPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/internships/:slug" element={<OpportunityPage category="internship" />} />
             <Route path="/jobs/:slug" element={<OpportunityPage category="job" />} />
             <Route path="/research/:slug" element={<OpportunityPage category="research" />} />
@@ -53,8 +57,11 @@ const App = () => {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/saved" element={<SavedPage />} />
+            <Route path="/applications" element={<ApplicationTrackerPage />} />
             <Route path="/tracker" element={<ApplicationTrackerPage />} />
-            <Route path="/profile" element={<ProfileSettingsPage />} />
+            <Route path="/alerts" element={<JobAlertsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/settings" element={<ProfileSettingsPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/disclaimer" element={<DisclaimerPage />} />

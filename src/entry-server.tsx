@@ -3,7 +3,7 @@ import { StaticRouter } from "react-router-dom/server";
 import { HelmetProvider, type HelmetServerState } from "@lib/helmet";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./contexts/ToastContext";
-import { WishlistProvider } from "./contexts/WishlistContext";
+import { UserDataProvider } from "./contexts/UserDataContext";
 import App from "./App";
 import "./styles/tailwind.css";
 
@@ -20,9 +20,9 @@ export async function render(url: string): Promise<RenderResult> {
       <StaticRouter location={url}>
         <ToastProvider>
           <AuthProvider>
-            <WishlistProvider>
+            <UserDataProvider>
               <App />
-            </WishlistProvider>
+            </UserDataProvider>
           </AuthProvider>
         </ToastProvider>
       </StaticRouter>

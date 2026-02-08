@@ -8,7 +8,7 @@ import OpportunityCard from "../components/OpportunityCard";
 import OpportunitySummary from "../components/OpportunitySummary";
 import { useAuth } from "../contexts/AuthContext";
 import { useToast } from "../contexts/ToastContext";
-import { useWishlist } from "../contexts/WishlistContext";
+import { useUserData } from "../contexts/UserDataContext";
 import { FALLBACK_LOGO, getContentByCategory, getContentBySlug } from "../lib/content";
 import { subscribeToPageViews } from "../lib/pageViews";
 import { logInteraction } from "../lib/analytics";
@@ -38,7 +38,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const location = useLocation();
   const { user } = useAuth();
   const { showToast } = useToast();
-  const { isSaved, toggleSave } = useWishlist();
+  const { isJobSaved, saveJob, removeJob } = useUserData();
   const [shareOpen, setShareOpen] = useState(false);
   const [pageViews, setPageViews] = useState<number | null>(null);
 
@@ -51,7 +51,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const metaImage = absoluteUrl(frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO);
   const categoryPath = category === "internship" ? "internships" : category === "job" ? "jobs" : "research";
   const canonical = canonicalHref(frontmatter.canonicalUrl);
-  const saved = isSaved(entry.slug, entry.category);
+  const saved = isJobSaved(entry.slug, entry.category);
 
   const breadcrumbs = buildBreadcrumbSchema([
     { name: "Home", url: "https://internshipshub.in/" },
@@ -128,18 +128,38 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   };
 
   const handleSave = () => {
+    if (!user) {
+      showToast("Sign in to save jobs", { type: "info" });
+      navigate("/auth", { state: { redirectTo: location.pathname } });
+      return;
+    }
+
     const alreadySaved = saved;
-    toggleSave({
-      slug: entry.slug,
-      type: entry.category,
-      title: frontmatter.title,
-      company: frontmatter.company,
-      applyLink: frontmatter.applyLink
-    });
-    showToast(alreadySaved ? "Removed from saved" : "Saved to your list", {
-      type: alreadySaved ? "info" : "success",
-      description: alreadySaved ? undefined : "Find everything under Saved"
-    });
+    if (alreadySaved) {
+      const res = removeJob(entry.slug, entry.category);
+      if (!res.ok) {
+        showToast(res.error, { type: "error" });
+        return;
+      }
+      showToast("Removed from saved", { type: "info" });
+    } else {
+      const res = saveJob({
+        slug: entry.slug,
+        type: entry.category,
+        title: frontmatter.title,
+        company: frontmatter.company,
+        applyLink: frontmatter.applyLink
+      });
+      if (!res.ok) {
+        showToast(res.error, { type: "error" });
+        return;
+      }
+      showToast("Saved to your list", {
+        type: "success",
+        description: "Find everything under Saved"
+      });
+    }
+
     logInteraction("save_toggle", {
       slug: entry.slug,
       category,

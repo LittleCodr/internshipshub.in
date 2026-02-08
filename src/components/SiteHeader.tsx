@@ -2,8 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { getAllContent } from "../lib/content";
 import { useAuth } from "../contexts/AuthContext";
-import { useWishlist } from "../contexts/WishlistContext";
-import { useProfilePreferences } from "../hooks/useProfilePreferences";
+import { useUserData } from "../contexts/UserDataContext";
 
 const navItems = [
   { to: "/", label: "Home" },
@@ -18,12 +17,10 @@ const SiteHeader = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
-  const { alertsEnabled, digestEnabled, themePref, setAlertsEnabled, setDigestEnabled, cycleThemePref } =
-    useProfilePreferences();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-  const { items } = useWishlist();
+  const { savedJobs, jobAlerts } = useUserData();
 
   const contentIndex = useMemo(
     () =>
@@ -195,125 +192,32 @@ const SiteHeader = () => {
                       <p className="font-semibold text-slate-900">{user.email}</p>
                       <p className="text-[11px] text-emerald-700">Last active {lastSeen}</p>
                       <div className="mt-1 flex flex-wrap gap-2 text-[11px] font-semibold text-emerald-900">
-                        <span className="rounded-full bg-white px-2 py-0.5">Saved {items.length}</span>
-                        <span className="rounded-full bg-white px-2 py-0.5">Alerts {alertsEnabled ? "On" : "Off"}</span>
+                        <span className="rounded-full bg-white px-2 py-0.5">Saved {savedJobs.length}</span>
+                        <span className="rounded-full bg-white px-2 py-0.5">Alerts {jobAlerts.length}</span>
                       </div>
                     </div>
                   </div>
 
-                  <nav className="mt-3 grid gap-2">
-                    <NavLink
-                      to="/saved"
-                      className="flex items-center justify-between rounded-xl px-3 py-2 text-emerald-800 transition hover:bg-emerald-50"
-                      onClick={() => setProfileOpen(false)}
-                    >
-                      <div>
-                        <p className="font-semibold">Saved opportunities</p>
-                        <p className="text-[11px] text-emerald-700">All bookmarks in one place</p>
-                      </div>
-                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">{items.length}</span>
+                  <nav className="mt-3 grid gap-1 text-emerald-900">
+                    <NavLink to="/dashboard" className="rounded-xl px-3 py-2 transition hover:bg-emerald-50" onClick={() => setProfileOpen(false)}>
+                      Dashboard
                     </NavLink>
-
-                    <NavLink
-                      to="/tracker"
-                      className="flex items-center justify-between rounded-xl px-3 py-2 text-emerald-800 transition hover:bg-emerald-50"
-                      onClick={() => setProfileOpen(false)}
-                    >
-                      <div>
-                        <p className="font-semibold">Application tracker</p>
-                        <p className="text-[11px] text-emerald-700">Mark applied, interviews, offers</p>
-                      </div>
-                      <span aria-hidden>↗</span>
+                    <NavLink to="/saved" className="rounded-xl px-3 py-2 transition hover:bg-emerald-50" onClick={() => setProfileOpen(false)}>
+                      Saved Jobs
                     </NavLink>
-
-                    <NavLink
-                      to="/profile"
-                      className="flex items-center justify-between rounded-xl px-3 py-2 text-emerald-800 transition hover:bg-emerald-50"
-                      onClick={() => setProfileOpen(false)}
-                    >
-                      <div>
-                        <p className="font-semibold">Profile & preferences</p>
-                        <p className="text-[11px] text-emerald-700">Update login, alerts, newsletters</p>
-                      </div>
-                      <span aria-hidden>⚙</span>
+                    <NavLink to="/applications" className="rounded-xl px-3 py-2 transition hover:bg-emerald-50" onClick={() => setProfileOpen(false)}>
+                      Applications
                     </NavLink>
-
-                    <NavLink
-                      to="/contact"
-                      className="flex items-center justify-between rounded-xl px-3 py-2 text-emerald-800 transition hover:bg-emerald-50"
-                      onClick={() => setProfileOpen(false)}
-                    >
-                      <div>
-                        <p className="font-semibold">Get support</p>
-                        <p className="text-[11px] text-emerald-700">Talk to the team, report issues</p>
-                      </div>
-                      <span aria-hidden>✉</span>
+                    <NavLink to="/alerts" className="rounded-xl px-3 py-2 transition hover:bg-emerald-50" onClick={() => setProfileOpen(false)}>
+                      Job Alerts
+                    </NavLink>
+                    <NavLink to="/profile" className="rounded-xl px-3 py-2 transition hover:bg-emerald-50" onClick={() => setProfileOpen(false)}>
+                      Profile
+                    </NavLink>
+                    <NavLink to="/settings" className="rounded-xl px-3 py-2 transition hover:bg-emerald-50" onClick={() => setProfileOpen(false)}>
+                      Settings
                     </NavLink>
                   </nav>
-
-                  <div className="mt-3 rounded-xl border border-emerald-50 bg-emerald-50/40 p-3">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-700">Quick controls</p>
-                    <div className="mt-2 grid gap-2">
-                      <button
-                        type="button"
-                        className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-left font-semibold text-emerald-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-                        onClick={() => setAlertsEnabled((v) => !v)}
-                        aria-pressed={alertsEnabled}
-                      >
-                        <span>
-                          Job alerts
-                          <span className="block text-[11px] font-normal text-emerald-700">Notify when similar roles drop</span>
-                        </span>
-                        <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${alertsEnabled ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"}`}>
-                          {alertsEnabled ? "On" : "Off"}
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-left font-semibold text-emerald-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-                        onClick={() => setDigestEnabled((v) => !v)}
-                        aria-pressed={digestEnabled}
-                      >
-                        <span>
-                          Weekly digest
-                          <span className="block text-[11px] font-normal text-emerald-700">One email with the best picks</span>
-                        </span>
-                        <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${digestEnabled ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"}`}>
-                          {digestEnabled ? "On" : "Muted"}
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-left font-semibold text-emerald-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-                        onClick={cycleThemePref}
-                      >
-                        <span>
-                          Theme preference
-                          <span className="block text-[11px] font-normal text-emerald-700">Current: {themePref}</span>
-                        </span>
-                        <span aria-hidden>↻</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 grid gap-2 text-emerald-800">
-                    <NavLink
-                      to="/privacy-policy"
-                      className="flex items-center justify-between rounded-xl px-3 py-2 transition hover:bg-emerald-50"
-                      onClick={() => setProfileOpen(false)}
-                    >
-                      <span>Privacy controls</span>
-                      <span aria-hidden>🔒</span>
-                    </NavLink>
-                    <NavLink
-                      to="/about"
-                      className="flex items-center justify-between rounded-xl px-3 py-2 transition hover:bg-emerald-50"
-                      onClick={() => setProfileOpen(false)}
-                    >
-                      <span>About & roadmap</span>
-                      <span aria-hidden>🧭</span>
-                    </NavLink>
-                  </div>
 
                   <button
                     type="button"
@@ -323,7 +227,7 @@ const SiteHeader = () => {
                       setProfileOpen(false);
                     }}
                   >
-                    Sign out
+                    Logout
                     <span aria-hidden>↗</span>
                   </button>
                 </div>
