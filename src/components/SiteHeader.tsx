@@ -158,7 +158,7 @@ const SiteHeader = () => {
               <span>Post an opportunity</span>
             </NavLink>
 
-            <div className="relative hidden sm:block">
+            <div className="relative block">
               {user ? (
                 <button
                   type="button"
@@ -183,7 +183,7 @@ const SiteHeader = () => {
               )}
 
               {profileOpen && user && (
-                <div className="absolute right-0 z-40 mt-3 w-80 rounded-2xl border border-emerald-100 bg-white p-4 text-sm shadow-xl shadow-emerald-100">
+                <div className="absolute right-0 z-40 mt-3 w-80 max-w-[calc(100vw-2rem)] rounded-2xl border border-emerald-100 bg-white p-4 text-sm shadow-xl shadow-emerald-100">
                   <div className="flex items-center gap-3 rounded-xl border border-emerald-50 bg-emerald-50/60 px-3 py-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-sm font-semibold uppercase text-white">
                       {user.email?.[0] ?? "U"}
