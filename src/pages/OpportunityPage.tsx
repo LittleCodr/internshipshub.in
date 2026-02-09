@@ -117,6 +117,10 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
     [baseStructuredData, inlineJsonLd]
   );
 
+  const primaryInlineSchema = useMemo(() => {
+    return inlineJsonLd.find((item) => "@type" in item) ?? null;
+  }, [inlineJsonLd]);
+
   const related = getContentByCategory(category)
     .filter((item) => item.slug !== entry.slug)
     .slice(0, 3);
@@ -442,6 +446,79 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
           <div className="space-y-8">
             <OpportunitySummary data={frontmatter} />
             <EligibilityList data={frontmatter} />
+            {primaryInlineSchema && (
+              <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">Structured data</p>
+                    <h2 className="text-lg font-semibold text-slate-900">Quick facts from this listing</h2>
+                  </div>
+                  {"@type" in primaryInlineSchema && (
+                    <span className="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-[11px] font-semibold text-emerald-800">
+                      {Array.isArray(primaryInlineSchema["@type"])
+                        ? (primaryInlineSchema["@type"] as unknown[])[0]
+                        : (primaryInlineSchema["@type"] as string)}
+                    </span>
+                  )}
+                </div>
+                <dl className="mt-4 grid gap-3 md:grid-cols-2">
+                  {"headline" in primaryInlineSchema && primaryInlineSchema.headline && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <dt className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">Headline</dt>
+                      <dd className="mt-1 text-sm text-slate-900">{String(primaryInlineSchema.headline)}</dd>
+                    </div>
+                  )}
+                  {"description" in primaryInlineSchema && primaryInlineSchema.description && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <dt className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">Description</dt>
+                      <dd className="mt-1 text-sm text-slate-900">{String(primaryInlineSchema.description)}</dd>
+                    </div>
+                  )}
+                  {"mainEntityOfPage" in primaryInlineSchema && primaryInlineSchema.mainEntityOfPage && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <dt className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">Canonical</dt>
+                      <dd className="mt-1 text-sm text-emerald-800 break-all">
+                        {String(primaryInlineSchema.mainEntityOfPage)}
+                      </dd>
+                    </div>
+                  )}
+                  {"datePublished" in primaryInlineSchema && primaryInlineSchema.datePublished && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <dt className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">Published</dt>
+                      <dd className="mt-1 text-sm text-slate-900">{String(primaryInlineSchema.datePublished)}</dd>
+                    </div>
+                  )}
+                  {"dateModified" in primaryInlineSchema && primaryInlineSchema.dateModified && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <dt className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">Updated</dt>
+                      <dd className="mt-1 text-sm text-slate-900">{String(primaryInlineSchema.dateModified)}</dd>
+                    </div>
+                  )}
+                  {"publisher" in primaryInlineSchema && primaryInlineSchema.publisher && typeof primaryInlineSchema.publisher === "object" && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <dt className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">Publisher</dt>
+                      <dd className="mt-1 text-sm text-slate-900">{String((primaryInlineSchema.publisher as { name?: string }).name ?? "")}</dd>
+                    </div>
+                  )}
+                  {"author" in primaryInlineSchema && primaryInlineSchema.author && typeof primaryInlineSchema.author === "object" && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <dt className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">Author</dt>
+                      <dd className="mt-1 text-sm text-slate-900">{String((primaryInlineSchema.author as { name?: string }).name ?? "")}</dd>
+                    </div>
+                  )}
+                  {"image" in primaryInlineSchema && primaryInlineSchema.image && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <dt className="text-[11px] uppercase tracking-[0.14em] text-emerald-700">Image</dt>
+                      <dd className="mt-1 text-sm text-emerald-800 break-all">
+                        {Array.isArray(primaryInlineSchema.image)
+                          ? String(primaryInlineSchema.image[0])
+                          : String(primaryInlineSchema.image)}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              </section>
+            )}
             <section className="prose prose-slate max-w-none">
               <MDXContent components={mdxComponents} />
             </section>
