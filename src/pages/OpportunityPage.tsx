@@ -84,32 +84,67 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   }, []);
 
   const mdxComponents = useMemo(() => {
+    const extractText = (value: ComponentProps<"script">["children"] | ComponentProps<"code">["children"]) => {
+      if (Array.isArray(value)) return value.join("");
+      if (typeof value === "string" || typeof value === "number") return String(value);
+      return "";
+    };
+
+    const ingestJson = (raw: string) => {
+      const trimmed = raw.trim();
+      if (!trimmed.startsWith("{") && !trimmed.startsWith("[")) return false;
+      try {
+        const parsed = JSON.parse(trimmed);
+        handleInlineJsonLd(parsed);
+        return true;
+      } catch (error) {
+        console.warn("Could not parse inline JSON-LD", error);
+        return false;
+      }
+    };
+
     const Script = ({ children, type }: ComponentProps<"script">) => {
       useEffect(() => {
         if (type !== "application/ld+json") return;
-
-        const extractText = (value: ComponentProps<"script">["children"]) => {
-          if (Array.isArray(value)) return value.join("");
-          if (typeof value === "string" || typeof value === "number") return String(value);
-          return "";
-        };
-
-        const raw = extractText(children).trim();
+        const raw = extractText(children);
         if (!raw) return;
-
-        try {
-          const parsed = JSON.parse(raw);
-          handleInlineJsonLd(parsed);
-        } catch (error) {
-          console.warn("Could not parse inline JSON-LD", error);
-        }
-      }, [children, type, handleInlineJsonLd]);
+        ingestJson(raw);
+      }, [children, type]);
 
       if (type === "application/ld+json") return null;
       return <script type={type}>{children}</script>;
     };
 
-    return { script: Script };
+    const Code = ({ children, className, ...rest }: ComponentProps<"code">) => {
+      const raw = extractText(children);
+      const looksJsonLd = raw.includes("\"@context\"") || raw.includes("\"headline\"") || raw.includes("\"slug\"");
+      if (looksJsonLd && ingestJson(raw)) return null;
+      return (
+        <code className={className} {...rest}>
+          {children}
+        </code>
+      );
+    };
+
+    const Pre = ({ children, className, ...rest }: ComponentProps<"pre">) => {
+      // If the child is a code block with JSON-LD, hide the whole pre after ingestion.
+      if (children && typeof children === "object" && "props" in (children as { props?: unknown })) {
+        const maybeCode = (children as { props?: { children?: unknown } }).props;
+        if (maybeCode?.children) {
+          const raw = extractText(maybeCode.children as ComponentProps<"code">["children"]);
+          const looksJsonLd = raw.includes("\"@context\"") || raw.includes("\"headline\"") || raw.includes("\"slug\"");
+          if (looksJsonLd && ingestJson(raw)) return null;
+        }
+      }
+
+      return (
+        <pre className={className} {...rest}>
+          {children}
+        </pre>
+      );
+    };
+
+    return { script: Script, code: Code, pre: Pre };
   }, [handleInlineJsonLd]);
 
   const structuredData = useMemo(
