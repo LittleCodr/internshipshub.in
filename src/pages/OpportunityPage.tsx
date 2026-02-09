@@ -1,5 +1,5 @@
 import { Helmet } from "@lib/helmet";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ComponentProps } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import ApplyCta from "../components/ApplyCta";
 import EligibilityList from "../components/EligibilityList";
@@ -41,6 +41,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
   const { isJobSaved, saveJob, removeJob } = useUserData();
   const [shareOpen, setShareOpen] = useState(false);
   const [pageViews, setPageViews] = useState<number | null>(null);
+  const [inlineJsonLd, setInlineJsonLd] = useState<Array<Record<string, unknown>>>([]);
 
   if (!entry) {
     return <Navigate to="/404" replace />;
@@ -62,12 +63,59 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
     { name: frontmatter.title, url: frontmatter.canonicalUrl }
   ]);
 
-  const structuredData = [
-    buildJobPostingSchema(entry),
-    buildArticleSchema(entry),
-    buildOrganizationSchema(entry),
-    breadcrumbs
-  ];
+  const baseStructuredData = useMemo(
+    () => [buildJobPostingSchema(entry), buildArticleSchema(entry), buildOrganizationSchema(entry), breadcrumbs],
+    [breadcrumbs, entry]
+  );
+
+  useEffect(() => {
+    setInlineJsonLd([]);
+  }, [entry.slug]);
+
+  const handleInlineJsonLd = useCallback((payload: unknown) => {
+    if (!payload || typeof payload !== "object") return;
+
+    setInlineJsonLd((prev) => {
+      const serialized = JSON.stringify(payload);
+      const alreadyPresent = prev.some((item) => JSON.stringify(item) === serialized);
+      if (alreadyPresent) return prev;
+      return [...prev, payload as Record<string, unknown>];
+    });
+  }, []);
+
+  const mdxComponents = useMemo(() => {
+    const Script = ({ children, type }: ComponentProps<"script">) => {
+      useEffect(() => {
+        if (type !== "application/ld+json") return;
+
+        const extractText = (value: ComponentProps<"script">["children"]) => {
+          if (Array.isArray(value)) return value.join("");
+          if (typeof value === "string" || typeof value === "number") return String(value);
+          return "";
+        };
+
+        const raw = extractText(children).trim();
+        if (!raw) return;
+
+        try {
+          const parsed = JSON.parse(raw);
+          handleInlineJsonLd(parsed);
+        } catch (error) {
+          console.warn("Could not parse inline JSON-LD", error);
+        }
+      }, [children, type, handleInlineJsonLd]);
+
+      if (type === "application/ld+json") return null;
+      return <script type={type}>{children}</script>;
+    };
+
+    return { script: Script };
+  }, [handleInlineJsonLd]);
+
+  const structuredData = useMemo(
+    () => [...baseStructuredData, ...inlineJsonLd],
+    [baseStructuredData, inlineJsonLd]
+  );
 
   const related = getContentByCategory(category)
     .filter((item) => item.slug !== entry.slug)
@@ -374,7 +422,7 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
             <OpportunitySummary data={frontmatter} />
             <EligibilityList data={frontmatter} />
             <section className="prose prose-slate max-w-none">
-              <MDXContent />
+              <MDXContent components={mdxComponents} />
             </section>
           </div>
           <div className="space-y-6 lg:sticky lg:top-20" id="apply">
