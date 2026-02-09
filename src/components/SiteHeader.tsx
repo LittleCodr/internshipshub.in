@@ -76,7 +76,7 @@ const SiteHeader = () => {
         <div className="absolute right-10 top-10 h-20 w-20 rounded-full bg-amber-200/30 blur-3xl" aria-hidden />
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <NavLink to="/" className="flex items-center gap-3 text-base font-semibold text-emerald-900 sm:text-lg">
-            <img src="/logo.png" alt="Internshipshub logo" className="h-10 w-10 rounded-2xl border border-emerald-100 bg-white p-1 shadow-lg shadow-emerald-100/60" />
+            <img src="/logos/logo.svg" alt="Internshipshub logo" className="h-10 w-10 rounded-2xl border border-emerald-100 bg-white p-1 shadow-lg shadow-emerald-100/60" width={40} height={40} />
             <div className="leading-tight">
               <span className="block text-[0.7rem] uppercase tracking-[0.2em] text-emerald-700">Internships & Research</span>
               <span className="block text-[1.12rem] font-bold tracking-tight">Internshipshub.in</span>

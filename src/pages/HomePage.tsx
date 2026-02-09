@@ -57,7 +57,7 @@ const HomePage = () => {
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://internshipshub.in/" />
-        <meta property="og:image" content="https://internshipshub.in/logo.png" />
+        <meta property="og:image" content="https://internshipshub.in/logos/logo.svg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Paid Internships & Research Programs 2026 | Internshipshub" />
         <meta

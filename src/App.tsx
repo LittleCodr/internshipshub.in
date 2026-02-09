@@ -34,6 +34,8 @@ const App = () => {
         <link rel="sitemap" type="application/xml" href="https://internshipshub.in/sitemap.xml" />
         <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
         <meta name="bingbot" content="index,follow" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Helmet>
       <SiteHeader />
       <PageTransition />
