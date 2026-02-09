@@ -355,35 +355,56 @@ const OpportunityPage = ({ category }: OpportunityPageProps) => {
                 <span className="pill bg-white ring-emerald-100">{frontmatter.type}</span>
                 <span className="pill bg-emerald-50 ring-emerald-100">{frontmatter.remote ? "Remote" : `${frontmatter.city}, ${frontmatter.state}`}</span>
                 <span className="pill bg-amber-50 ring-amber-100">Apply by {new Date(frontmatter.deadline).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
-                <button
-                  type="button"
-                  onClick={handleSave}
-                  aria-pressed={saved}
-                  className={`group inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] transition ${
-                    saved
-                      ? "border-emerald-200 bg-emerald-100 text-emerald-900 shadow-sm shadow-emerald-100"
-                      : "border-slate-200 bg-white text-emerald-800 hover:border-emerald-200 hover:shadow-sm"
-                  }`}
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className={`h-3.5 w-3.5 ${saved ? "fill-emerald-700 text-emerald-700" : "text-emerald-800"}`}
-                    fill={saved ? "currentColor" : "none"}
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    aria-hidden
-                  >
-                    <path d="M12 21s-6.5-4-9-9a5.2 5.2 0 0 1 9-4 5.2 5.2 0 0 1 9 4c-2.5 5-9 9-9 9Z" />
-                  </svg>
-                  <span>{saved ? "Saved" : "Save for later"}</span>
-                  <span className="hidden text-[10px] font-semibold uppercase tracking-[0.08em] text-emerald-700 sm:inline">
-                    syncs to profile
-                  </span>
-                </button>
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-[0.16em] text-emerald-700">{frontmatter.company}</p>
                 <h1 className="mt-1 text-3xl font-bold leading-tight text-slate-900 md:text-4xl">{frontmatter.title}</h1>
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleShare}
+                    className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-black"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden
+                    >
+                      <path d="M18 8.5a3 3 0 1 0-3-3" />
+                      <path d="M6 15.5a3 3 0 1 0 3 3" />
+                      <path d="M18 8 9 12" />
+                      <path d="m9 12 6 6" />
+                    </svg>
+                    <span>Share</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSave}
+                    aria-pressed={saved}
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition hover:-translate-y-0.5 ${
+                      saved
+                        ? "border border-emerald-200 bg-emerald-100 text-emerald-900 shadow-emerald-100"
+                        : "border border-slate-200 bg-white text-emerald-800 hover:border-emerald-200"
+                    }`}
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      className={`h-4 w-4 ${saved ? "fill-emerald-700 text-emerald-700" : "text-emerald-800"}`}
+                      fill={saved ? "currentColor" : "none"}
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      aria-hidden
+                    >
+                      <path d="M12 21s-6.5-4-9-9a5.2 5.2 0 0 1 9-4 5.2 5.2 0 0 1 9 4c-2.5 5-9 9-9 9Z" />
+                    </svg>
+                    <span>{saved ? "Saved" : "Save this"}</span>
+                  </button>
+                </div>
               </div>
               <p className="max-w-3xl text-sm text-slate-700">{frontmatter.description}</p>
               <div className="flex flex-wrap gap-2 text-xs text-slate-700">
