@@ -1,4 +1,5 @@
 import contentIndex from "../../generated/content-index.json";
+import { absoluteUrl } from "./seo";
 import type { ContentEntry, ContentFrontmatter, OpportunityType } from "../types/content";
 
 const FALLBACK_LOGO = "/logos/logo.svg";
@@ -14,9 +15,17 @@ type ContentModule = {
   default: ContentEntry["component"];
 };
 
-function withDefaults(frontmatter: ContentFrontmatter): ContentFrontmatter {
+function withDefaults(frontmatter: ContentFrontmatter, record: ContentIndexRecord): ContentFrontmatter {
+  const pathSegment = record.category === "internship" ? "internships" : record.category === "job" ? "jobs" : "research";
+  const canonical = frontmatter.canonicalUrl?.trim()
+    ? absoluteUrl(frontmatter.canonicalUrl)
+    : absoluteUrl(`/${pathSegment}/${record.slug}`);
+
   return {
     ...frontmatter,
+    canonicalUrl: canonical,
+    index: frontmatter.index !== false,
+    priority: frontmatter.priority ?? 0.7,
     companyLogo: frontmatter.companyLogo?.trim() ? frontmatter.companyLogo : FALLBACK_LOGO
   };
 }
@@ -35,7 +44,7 @@ const entries: ContentEntry[] = (contentIndex as ContentIndexRecord[]).map((reco
   const [, module] = matched;
 
   return {
-    frontmatter: withDefaults(record.frontmatter),
+    frontmatter: withDefaults(record.frontmatter, record),
     slug: record.slug,
     category: record.category,
     component: module.default

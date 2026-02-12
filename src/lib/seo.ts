@@ -29,6 +29,7 @@ export function canonicalHref(url: string) {
   return absoluteUrl(url);
 }
 
-export function robotsContent(index: boolean) {
-  return index ? "index,follow" : "noindex,nofollow";
+export function robotsContent(index?: boolean) {
+  // Default to indexable pages unless explicitly disabled to avoid accidental noindex tags when the flag is omitted.
+  return index === false ? "noindex,nofollow" : "index,follow";
 }
